@@ -13,7 +13,7 @@ const BULLET  = preload("res://scenes/game/bullet.tscn")
 @onready var sfx_death: AudioStreamPlayer2D = $sfx_death
 @onready var sfx_respawn: AudioStreamPlayer2D = $sfx_respawn
 @onready var sfx_shoot_1: AudioStreamPlayer2D = $sfx_shoot1
-
+@onready var health_bar: ProgressBar = $HealthBar
 
 @onready var game: Game = get_parent()
 
@@ -27,7 +27,7 @@ func _enter_tree():
 func _ready():
 	if !is_multiplayer_authority():
 		sprite_2d.modulate = Color.RED
-		
+		health_bar.visible = false
 	
 
 func _physics_process(delta: float) -> void:
@@ -104,6 +104,7 @@ func shoot(shooter_pid):
 @rpc("any_peer")
 func take_damage(amount):
 	health -= amount
+	health_bar.value = health
 
 	if health <= 0:
 		# Hide everyone immediately
@@ -128,6 +129,7 @@ func sync_hide():
 func sync_respawn(pos: Vector2):
 	global_position = pos
 	health = MAX_HEALTH
+	health_bar.value = health
 	show()
 	set_physics_process(true)
 	$CollisionShape2D.disabled = false
