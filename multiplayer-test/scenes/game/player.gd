@@ -105,14 +105,29 @@ func take_damage(amount):
 	health -= amount
 
 	if health <= 0:
-		hide()
+		# Hide everyone immediately
+		sync_hide.rpc()
+		sfx_death.play()
 		set_physics_process(false)
-		$sfx_death.play()
+		$CollisionShape2D.disabled = true
 
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
 		health = MAX_HEALTH
 		global_position = game.get_random_spawnpoint()
-		show()
-		set_physics_process(true)
-		$sfx_respawn.play()
+		sync_respawn.rpc(global_position)
+		
+@rpc("call_local")
+func sync_hide():
+	hide()
+	set_physics_process(false)
+	$CollisionShape2D.disabled = true
+
+@rpc("call_local")
+func sync_respawn(pos: Vector2):
+	global_position = pos
+	health = MAX_HEALTH
+	show()
+	set_physics_process(true)
+	$CollisionShape2D.disabled = false
+	sfx_respawn.play()
