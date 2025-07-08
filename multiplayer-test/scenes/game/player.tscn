@@ -220,6 +220,8 @@ properties/0/replication_mode = 1
 collision_layer = 2
 script = ExtResource("1_uu06s")
 
+[node name="Camera2D" type="Camera2D" parent="."]
+
 [node name="HealthBar" type="ProgressBar" parent="."]
 anchors_preset = 8
 anchor_left = 0.5

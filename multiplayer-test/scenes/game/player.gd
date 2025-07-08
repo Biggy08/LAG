@@ -1,8 +1,9 @@
 
 class_name Player
 extends CharacterBody2D
-# Player Script 
+@onready var cam: Camera2D = $Camera2D
 
+# Player Script 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 const MAX_HEALTH = 100
@@ -25,10 +26,16 @@ func _enter_tree():
 	set_multiplayer_authority(int(str(name)))
 
 func _ready():
+	cam = $Camera2D
+	
 	if !is_multiplayer_authority():
 		sprite_2d.modulate = Color.RED
 		health_bar.visible = false
+		cam.enabled = false
 	
+	else:
+		cam.enabled = true
+		cam.make_current()  
 
 func _physics_process(delta: float) -> void:
 	 
@@ -90,8 +97,14 @@ func _physics_process(delta: float) -> void:
 	var is_left = velocity.x < 0  #(moving toward -ve x axis = left)
 	sprite_2d.flip_h = is_left
 	
-	# Combat
 
+func set_camera_limits(left: int, right: int, top: int, bottom: int):
+	cam.limit_left = left
+	cam.limit_right = right
+	cam.limit_top = top
+	cam.limit_bottom = bottom
+
+# Combat
 @rpc("call_local")
 func shoot(shooter_pid):
 	$sfx_shoot1.play()

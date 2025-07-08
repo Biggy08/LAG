@@ -96,6 +96,9 @@ func add_player(pid):
 	player.name = str(pid)
 	player.global_position = $TextureRect/Lobby.get_child(players.size()).global_position
 	players.append(player)
+	
+	player.call_deferred("set_camera_limits", -50, 1200, -4, 300)
+	
 	return player
 
 
@@ -137,3 +140,8 @@ func _on_back_pressed() -> void:
 
 func get_random_spawnpoint():
 	return $TextureRect/Lobby.get_children().pick_random().get_position()
+
+
+func _on_map_2_pressed() -> void:
+	pass
+	
