@@ -45,7 +45,8 @@ func _physics_process(delta: float) -> void:
 		$GunContainer/GunSprite.flip_v = false
 		
 	if Input.is_action_just_pressed("shoot"):
-		shoot.rpc(multiplayer.get_unique_id())
+		shoot.rpc_id(get_multiplayer_authority(), multiplayer.get_unique_id())
+		
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -94,10 +95,10 @@ func _physics_process(delta: float) -> void:
 @rpc("call_local")
 func shoot(shooter_pid):
 	$sfx_shoot1.play()
-	var bullet = BULLET.instantiate()
-	bullet.set_multiplayer_authority(shooter_pid)
-	get_parent().add_child(bullet)
-	bullet.transform = $GunContainer/GunSprite/Muzzle.global_transform
+	var muzzle = $GunContainer/GunSprite/Muzzle
+	
+	# Spawn bullet using the same RPC for all, including the shooter
+	spawn_bullet.rpc(muzzle.global_position, muzzle.global_rotation, shooter_pid)
 		
 
 @rpc("any_peer")
@@ -131,3 +132,11 @@ func sync_respawn(pos: Vector2):
 	set_physics_process(true)
 	$CollisionShape2D.disabled = false
 	sfx_respawn.play()
+
+@rpc("call_local")
+func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
+	var bullet = BULLET.instantiate()
+	bullet.set_multiplayer_authority(shooter_pid)
+	bullet.global_position = pos
+	bullet.rotation = rot
+	get_parent().add_child(bullet)

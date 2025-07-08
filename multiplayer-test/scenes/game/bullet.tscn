@@ -7,6 +7,7 @@
 size = Vector2(166, 35)
 
 [node name="bullet" type="Area2D"]
+scale = Vector2(0.1, 0.1)
 collision_mask = 3
 script = ExtResource("1_1bog7")
 
