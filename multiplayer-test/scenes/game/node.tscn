@@ -508,21 +508,31 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Join"
 
-[node name="Back" type="Button" parent="UI/Multiplayer"]
-offset_left = 470.0
-offset_top = 2.0
-offset_right = 636.0
-offset_bottom = 52.0
-theme_override_font_sizes/font_size = 30
-text = "Back
-"
-
 [node name="Virtual Joystick" parent="UI" instance=ExtResource("4_bquib")]
 offset_left = 73.0
 offset_top = -218.0
 offset_right = 294.0
 offset_bottom = -6.0
 action_up = "ui_accept"
+
+[node name="Back" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Back" type="Button" parent="UI/Back"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 496.0
+offset_right = 662.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 30
+text = "Back
+"
 
 [node name="sound_click" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(63, -59)
@@ -535,4 +545,4 @@ spawn_path = NodePath("..")
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="UI/Multiplayer/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="UI/Back/Back" to="." method="_on_back_pressed"]
