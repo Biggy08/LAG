@@ -6,6 +6,7 @@ extends Control
 ## Github: https://github.com/MarcoFazioRandom/Virtual-Joystick-Godot
 
 # EXPORTED VARIABLE
+signal shoot(direction: Vector2)
 
 ## The color of the button when the joystick is pressed.
 @export var pressed_color := Color.GRAY
@@ -126,6 +127,10 @@ func _update_joystick(touch_position: Vector2) -> void:
 	var _base_radius = _get_base_radius()
 	var center : Vector2 = _base.global_position + _base_radius
 	var vector : Vector2 = touch_position - center
+	
+	var base_radius = _get_base_radius().x
+	var dist_squared = vector.length_squared()
+	var is_outside_base = dist_squared > base_radius * base_radius
 	vector = vector.limit_length(clampzone_size)
 	
 	if joystick_mode == Joystick_mode.FOLLOWING and touch_position.distance_to(center) > clampzone_size:
@@ -133,9 +138,14 @@ func _update_joystick(touch_position: Vector2) -> void:
 	
 	_move_tip(center + vector)
 	
-	if vector.length_squared() > deadzone_size * deadzone_size:
+	if dist_squared > deadzone_size * deadzone_size:
 		is_pressed = true
-		output = (vector - (vector.normalized() * deadzone_size)) / (clampzone_size - deadzone_size)
+		output = (vector - vector.normalized() * deadzone_size) / (clampzone_size - deadzone_size)
+
+		# Only shoot when outside base
+		if is_outside_base:
+			# Call a shoot function or emit signal with direction
+			emit_signal("shoot", output.normalized())
 	else:
 		is_pressed = false
 		output = Vector2.ZERO
