@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=10 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
 [ext_resource type="Texture2D" uid="uid://dh66ac3lqpiko" path="res://assets/map/Terrain (16x16).png" id="3_kdpyv"]
 [ext_resource type="AudioStream" uid="uid://0hao7yg3fqm5" path="res://assets/sounds/click.mp3" id="4_bhoiw"]
-[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="4_bquib"]
 [ext_resource type="Texture2D" uid="uid://vccq6wdcb4w3" path="res://assets/map/background2.png" id="4_r7b02"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
@@ -394,9 +393,9 @@ position = Vector2(187, 209.5)
 
 [node name="TextureRect2" type="TextureRect" parent="."]
 anchors_preset = -1
-anchor_left = -3.482
-anchor_right = -0.475
-anchor_bottom = 2.506
+anchor_left = -3.48224
+anchor_right = -0.753281
+anchor_bottom = 2.25123
 offset_left = 0.26416
 offset_top = -18.0
 offset_right = 0.200012
@@ -508,18 +507,21 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Join"
 
-[node name="Virtual Joystick" parent="UI" instance=ExtResource("4_bquib")]
-offset_left = 73.0
-offset_top = -218.0
-offset_right = 294.0
-offset_bottom = -6.0
-action_up = "ui_accept"
+[node name="Back" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="Back" type="Button" parent="."]
-offset_left = 448.0
-offset_top = 2.0
-offset_right = 614.0
-offset_bottom = 52.0
+[node name="Back" type="Button" parent="UI/Back"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 496.0
+offset_right = 662.0
+offset_bottom = 50.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 30
 text = "Back
 "
@@ -532,6 +534,7 @@ stream = ExtResource("4_bhoiw")
 _spawnable_scenes = PackedStringArray("uid://c5won7nctd8y6")
 spawn_path = NodePath("..")
 
+[connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="UI/Back/Back" to="." method="_on_back_pressed"]

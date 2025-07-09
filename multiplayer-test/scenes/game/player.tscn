@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://c5won7nctd8y6"]
+[gd_scene load_steps=40 format=3 uid="uid://c5won7nctd8y6"]
 
 [ext_resource type="Texture2D" uid="uid://dgfe2a4ohwoxw" path="res://assets/players/Jump (32x32).png" id="1_gv3r6"]
 [ext_resource type="Script" uid="uid://cor1pol367n80" path="res://scenes/game/player.gd" id="1_uu06s"]
@@ -10,6 +10,13 @@
 [ext_resource type="Texture2D" uid="uid://c3uijctewcu0e" path="res://assets/weapons/ak47.png" id="8_m5ugi"]
 [ext_resource type="AudioStream" uid="uid://dai7mknuqc041" path="res://assets/sounds/DeathBell.mp3" id="9_bnwh7"]
 [ext_resource type="AudioStream" uid="uid://chw6fi6e6fryx" path="res://assets/sounds/Respawn.mp3" id="10_dsw4c"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="11_dsw4c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bnwh7"]
+bg_color = Color(0.103744, 0.103744, 0.103743, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dsw4c"]
+bg_color = Color(0, 0.455932, 0.125377, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uolrw"]
 atlas = ExtResource("2_duttb")
@@ -209,10 +216,43 @@ height = 50.0
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("Sprite2D:animation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("GunContainer/GunSprite:flip_h")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("Sprite2D:flip_h")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("Sprite2D:flip_v")
+properties/4/spawn = true
+properties/4/replication_mode = 1
 
 [node name="player" type="CharacterBody2D"]
 collision_layer = 2
+slide_on_ceiling = false
 script = ExtResource("1_uu06s")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 211.0
+offset_top = 164.0
+offset_right = 215.0
+offset_bottom = 191.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.2875, 0.182023)
+theme_override_styles/background = SubResource("StyleBoxFlat_bnwh7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dsw4c")
+value = 100.0
+show_percentage = false
 
 [node name="NameLabel" type="Label" parent="."]
 offset_left = 207.0
@@ -263,4 +303,35 @@ stream = ExtResource("9_bnwh7")
 stream = ExtResource("10_dsw4c")
 
 [node name="sfx_shoot1" type="AudioStreamPlayer2D" parent="."]
+visible = false
 stream = ExtResource("6_121pn")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Virtual Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
+layout_mode = 1
+offset_left = 161.0
+offset_top = 439.0
+offset_right = 341.0
+offset_bottom = 619.0
+deadzone_size = 41.0
+action_up = "ui_accept"
+
+[node name="Aim Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
+layout_mode = 1
+offset_left = 960.0
+offset_top = 422.0
+offset_right = 1140.0
+offset_bottom = 602.0
+use_input_actions = false
+action_left = ""
+action_right = ""
+action_up = ""
+
+[connection signal="shoot" from="CanvasLayer/Control/Aim Joystick" to="." method="_on_aim_joystick_shoot"]
