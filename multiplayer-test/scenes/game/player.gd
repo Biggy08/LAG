@@ -27,7 +27,7 @@ func _enter_tree():
 
 func _ready():
 	cam = $Camera2D
-	
+	$"CanvasLayer/Control/Aim Joystick".connect("shoot", Callable(self, "_on_AimJoystick_shoot"))
 	if !is_multiplayer_authority():
 		sprite_2d.modulate = Color.RED
 		health_bar.visible = false
@@ -51,8 +51,11 @@ func _physics_process(delta: float) -> void:
 	else:
 		$GunContainer/GunSprite.flip_v = false
 		
-	if Input.is_action_just_pressed("shoot"):
-		shoot.rpc_id(get_multiplayer_authority(), multiplayer.get_unique_id())
+	#if Input.is_action_just_pressed("shoot"):
+		#var shooter_pid = multiplayer.get_unique_id()
+		#var rotation = $GunContainer.rotation  # or however you get aim rotation
+		#shoot.rpc_id(get_multiplayer_authority(), shooter_pid, rotation) 
+
 		
 	# Add the gravity.
 	if not is_on_floor():
@@ -106,12 +109,13 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 
 # Combat
 @rpc("call_local")
-func shoot(shooter_pid):
+func shoot(shooter_pid: int, rotation: float):
 	$sfx_shoot1.play()
 	var muzzle = $GunContainer/GunSprite/Muzzle
 	
-	# Spawn bullet using the same RPC for all, including the shooter
-	spawn_bullet.rpc(muzzle.global_position, muzzle.global_rotation, shooter_pid)
+	# Spawn bullet with given rotation using the same RPC for all peers
+	spawn_bullet.rpc(muzzle.global_position, rotation, shooter_pid)
+
 		
 
 @rpc("any_peer")
@@ -155,3 +159,24 @@ func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
 	bullet.global_position = pos
 	bullet.rotation = rot
 	get_parent().add_child(bullet)
+
+
+# For shoting with joystick
+var can_shoot = true
+const SHOOT_COOLDOWN = 0.2  # 0.2 seconds between shots (adjust as needed)
+
+func shoot_in_direction(direction: Vector2) -> void:
+	if not can_shoot:
+		return
+	can_shoot = false
+
+	# Call networked shoot RPC on the multiplayer authority (the owner)
+	rpc_id(get_multiplayer_authority(), "shoot", multiplayer.get_unique_id(), direction.angle())
+
+	await get_tree().create_timer(SHOOT_COOLDOWN).timeout
+	can_shoot = true
+
+
+
+func _on_aim_joystick_shoot(direction: Vector2):
+	shoot_in_direction(direction)

@@ -1,9 +1,11 @@
 extends Area2D
 
-var speed = 800
+var speed = 1000  # You can adjust the bullet speed
+
 var dmg = 20  # Damage when bullet hits a player
 
 func _physics_process(delta):
+	
 	position += Vector2.RIGHT.rotated(rotation) * speed * delta
 
 	
