@@ -66,6 +66,18 @@ var _touch_index : int = -1
 # FUNCTIONS
 
 func _ready() -> void:
+	
+	# Disable joystick if this is not the local player's UI
+	var player = get_parent().get_parent()
+	if player and not player.is_multiplayer_authority():
+		print("❌ DISABLED joystick for non-authority →", player.name)
+		visible = false
+		set_process_input(false)
+		set_process(false)
+		return
+	else:
+		print("✅ ENABLED joystick for local player →", player.name)
+	
 	if ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch"):
 		printerr("The Project Setting 'emulate_mouse_from_touch' should be set to False")
 	if not ProjectSettings.get_setting("input_devices/pointing/emulate_touch_from_mouse"):
