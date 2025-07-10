@@ -265,8 +265,8 @@ texture_filter = 1
 position = Vector2(233, 196)
 scale = Vector2(1.75, 2.09375)
 sprite_frames = SubResource("SpriteFrames_0ntfe")
-animation = &"running"
-frame_progress = 0.446671
+animation = &"idle"
+autoplay = "idle"
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -316,19 +316,19 @@ offset_bottom = 40.0
 
 [node name="Virtual Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
 layout_mode = 1
-offset_left = 161.0
-offset_top = 439.0
-offset_right = 341.0
-offset_bottom = 619.0
+offset_left = 152.0
+offset_top = 385.0
+offset_right = 332.0
+offset_bottom = 565.0
 deadzone_size = 41.0
 action_up = "ui_accept"
 
 [node name="Aim Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
 layout_mode = 1
-offset_left = 960.0
-offset_top = 422.0
-offset_right = 1140.0
-offset_bottom = 602.0
+offset_left = 887.0
+offset_top = 390.0
+offset_right = 1067.0
+offset_bottom = 570.0
 use_input_actions = false
 action_left = ""
 action_right = ""

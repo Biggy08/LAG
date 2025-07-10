@@ -78,6 +78,7 @@ func shoot_in_direction(direction: Vector2) -> void:
 	await get_tree().create_timer(SHOOT_COOLDOWN).timeout
 	can_shoot = true
 
+var last_direction = 1  # 1 = right, -1 = left
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return	
@@ -102,13 +103,13 @@ func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("ui_left", "ui_right")
 	if direction:
 		velocity.x = direction * SPEED
+		last_direction = direction  # store the last movement direction
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
 
-	var is_left = velocity.x < 0
-	sprite_2d.flip_h = is_left
+	sprite_2d.flip_h = last_direction < 0  # face left if last direction was left
 
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -122,6 +123,7 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 
 @rpc("call_local")
 func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
+	$sfx_shoot1.play()
 	print("🛠 Bullet spawned on", name, "| Owner:", shooter_pid, "| pos:", pos, "| rot:", rot)
 	var bullet = BULLET.instantiate()
 	bullet.set_multiplayer_authority(shooter_pid)

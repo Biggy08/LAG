@@ -92,6 +92,7 @@ func _on_join_pressed() -> void:
 
 # SPAWN PLAYER
 func add_player(pid):
+	$sfx_join.play()
 	var player = PLAYER.instantiate()
 	player.name = str(pid)
 	player.global_position = $TextureRect/Lobby.get_child(players.size()).global_position
@@ -125,7 +126,7 @@ func show_host_disconnected_message():
 # BACK Button
 
 func _on_back_pressed() -> void:
-	$sound_click.play()
+	AudioManager.click_sound()
 	var pid = get_safe_unique_id()
 	if pid != -1:
 		var player_node = get_node_or_null(str(pid))
@@ -134,6 +135,7 @@ func _on_back_pressed() -> void:
 
 	multiplayer.multiplayer_peer = null
 	get_tree().change_scene_to_file("res://scenes/menu/MainMenu.tscn")
+	AudioManager.play_music()
 
 
 ## Random Spawn Points for respawn

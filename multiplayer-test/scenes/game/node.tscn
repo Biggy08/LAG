@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=11 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
 [ext_resource type="Texture2D" uid="uid://dh66ac3lqpiko" path="res://assets/map/Terrain (16x16).png" id="3_kdpyv"]
 [ext_resource type="AudioStream" uid="uid://0hao7yg3fqm5" path="res://assets/sounds/click.mp3" id="4_bhoiw"]
 [ext_resource type="Texture2D" uid="uid://vccq6wdcb4w3" path="res://assets/map/background2.png" id="4_r7b02"]
+[ext_resource type="AudioStream" uid="uid://2ef0g0domd11" path="res://assets/sounds/menu_sounds/join.mp3" id="6_ubwsr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
 texture = ExtResource("3_kdpyv")
@@ -526,13 +527,16 @@ theme_override_font_sizes/font_size = 30
 text = "Back
 "
 
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://c5won7nctd8y6")
+spawn_path = NodePath("..")
+
 [node name="sound_click" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(63, -59)
 stream = ExtResource("4_bhoiw")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://c5won7nctd8y6")
-spawn_path = NodePath("..")
+[node name="sfx_join" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ubwsr")
 
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
