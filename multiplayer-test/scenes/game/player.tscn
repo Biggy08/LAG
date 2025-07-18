@@ -229,7 +229,7 @@ properties/4/path = NodePath("Sprite2D:flip_v")
 properties/4/spawn = true
 properties/4/replication_mode = 1
 
-[node name="player" type="CharacterBody2D"]
+[node name="player" type="CharacterBody2D" groups=["Player"]]
 collision_layer = 2
 slide_on_ceiling = false
 script = ExtResource("1_uu06s")

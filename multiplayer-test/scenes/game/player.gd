@@ -165,3 +165,17 @@ func sync_respawn(pos: Vector2):
 	set_physics_process(true)
 	$CollisionShape2D.disabled = false
 	sfx_respawn.play()
+	
+	
+func reset_on_teleport():
+	velocity = Vector2.ZERO
+	if is_multiplayer_authority():
+		cam.make_current()
+
+@rpc("authority")
+func rpc_teleport_to_position(pos: Vector2):
+	teleport_to_position(pos)
+
+func teleport_to_position(pos: Vector2):
+	global_position = pos
+	reset_on_teleport()

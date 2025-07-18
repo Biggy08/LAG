@@ -82,7 +82,8 @@ func _on_join_pressed() -> void:
 			players = players.filter(func(p): return p.name != str(pid))
 	)
 
-	multiplayer.server_disconnected.connect(func():
+	multiplayer.server_disconnected.connect(
+		func():
 		print("🔌 Disconnected from host")
 		show_host_disconnected_message()
 	)
@@ -95,10 +96,10 @@ func add_player(pid):
 	$sfx_join.play()
 	var player = PLAYER.instantiate()
 	player.name = str(pid)
-	player.global_position = $TextureRect/Lobby.get_child(players.size()).global_position
+	player.global_position = $TextureRect1/Lobby.get_child(players.size()).global_position
 	players.append(player)
 	
-	player.call_deferred("set_camera_limits", -50, 1200, -4, 300)
+	#player.call_deferred("set_camera_limits", -50, 1200, -4, 300)
 	
 	return player
 
@@ -141,9 +142,38 @@ func _on_back_pressed() -> void:
 ## Random Spawn Points for respawn
 
 func get_random_spawnpoint():
-	return $TextureRect/Lobby.get_children().pick_random().get_position()
+	return $TextureRect1/Lobby.get_children().pick_random().get_position()
 
 
+func get_local_player():
+	for player in get_tree().get_nodes_in_group("Player"):
+		if player.get_multiplayer_authority() == multiplayer.get_unique_id():
+			return player
+	return null
+
+
+# Teleport to map2
 func _on_map_2_pressed() -> void:
-	pass
+	AudioManager.click_sound()
+	print("Map 2 was pressed")
+
+	var local_player:Player = get_local_player()
+	if local_player:
+		var spawn_points = [
+			$TextureRect2/Map2/Map2Spawn1,
+			$TextureRect2/Map2/Map2Spawn2,
+			$TextureRect2/Map2/Map2Spawn3,
+			$TextureRect2/Map2/Map2Spawn4,
+			$TextureRect2/Map2/Map2Spawn5
+		]
+		var spawn: Marker2D = spawn_points.pick_random()
+
+		local_player.rpc_teleport_to_position(spawn.global_position)
+
+			
+			
+
+		
+
+
 	

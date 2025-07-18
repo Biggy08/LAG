@@ -31,6 +31,10 @@ window/stretch/scale=0.7
 
 enabled=PackedStringArray()
 
+[global_group]
+
+Player=""
+
 [input]
 
 shoot={
