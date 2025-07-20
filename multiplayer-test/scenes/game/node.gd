@@ -3,17 +3,18 @@ extends Node
 
 @onready var multiplayer_ui = $UI/Multiplayer
 @onready var host_ip_label = $UI/HostIPLabel
+
 const PLAYER = preload("res://scenes/game/player.tscn")
+
 var peer = ENetMultiplayerPeer.new()
 var players: Array[Player] = []
 
-
 func _ready():
+	add_to_group("Game")
 	$MultiplayerSpawner.spawn_function = add_player
 	host_ip_label.hide() 
-
+	
 # Get Valid LAN IP (Android + PC)
-
 func get_valid_lan_ip() -> String:
 	var valid_ips = []
 	for ip in IP.get_local_addresses():
@@ -155,7 +156,9 @@ func get_local_player():
 # Teleport to map2
 func _on_map_2_pressed() -> void:
 	AudioManager.click_sound()
+	Globals.current_map = 2
 	print("Map 2 was pressed")
+	print("Current Map : " + str(Globals.current_map))
 
 	var local_player:Player = get_local_player()
 	if local_player:
@@ -172,8 +175,19 @@ func _on_map_2_pressed() -> void:
 
 			
 			
+func get_random_map2_spawnpoint():
+	print("Respawn Updated to map2")
+	var spawn_points = [
+		$TextureRect2/Map2/Map2Spawn1,
+		$TextureRect2/Map2/Map2Spawn2,
+		$TextureRect2/Map2/Map2Spawn3,
+		$TextureRect2/Map2/Map2Spawn4,
+		$TextureRect2/Map2/Map2Spawn5
+	]
+	var spawn: Marker2D = spawn_points.pick_random()
+	return spawn.global_position
 
-		
+
 
 
 	

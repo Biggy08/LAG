@@ -18,7 +18,9 @@ const BULLET = preload("res://scenes/game/bullet.tscn")
 @onready var health_bar = $HealthBar
 @onready var muzzle = $GunContainer/GunSprite/Muzzle
 
-@onready var game = get_parent()
+@onready var game = get_node("/root/game")
+
+
 
 var health = MAX_HEALTH
 var facing_left = false
@@ -147,7 +149,11 @@ func take_damage(amount):
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
 		health = MAX_HEALTH
-		global_position = game.get_random_spawnpoint()
+		if Globals.current_map == 2:
+			global_position = game.get_random_map2_spawnpoint()
+		else:
+			global_position = game.get_random_spawnpoint()
+
 		sync_respawn.rpc(global_position)
 
 @rpc("call_local")
@@ -156,8 +162,11 @@ func sync_hide():
 	set_physics_process(false)
 	$CollisionShape2D.disabled = true
 
+
+
 @rpc("call_local")
 func sync_respawn(pos: Vector2):
+	print(name,"  respawned at ", Globals.current_map)
 	global_position = pos
 	health = MAX_HEALTH
 	health_bar.value = health

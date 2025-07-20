@@ -18,6 +18,7 @@ config/icon="res://assets/logo/Logo2.png"
 
 [autoload]
 
+Globals="*res://scenes/game/Globals.gd"
 AudioManager="*res://scenes/menu/AudioManager.tscn"
 
 [display]

@@ -397,12 +397,12 @@ position = Vector2(187, 209.5)
 [node name="TextureRect2" type="TextureRect" parent="."]
 texture_filter = 1
 anchors_preset = -1
-anchor_left = -4.631
-anchor_right = -0.276
+anchor_left = -4.991
+anchor_right = -0.636
 anchor_bottom = 3.651
 offset_left = -0.199951
 offset_right = -0.199982
-offset_bottom = 0.0499268
+offset_bottom = 0.0498047
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -421,7 +421,7 @@ tile_set = SubResource("TileSet_2dl3w")
 position = Vector2(504.5, 283.75)
 
 [node name="Map2Spawn2" type="Marker2D" parent="TextureRect2/Map2"]
-position = Vector2(708.25, 261.25)
+position = Vector2(603.5, 220)
 
 [node name="Map2Spawn3" type="Marker2D" parent="TextureRect2/Map2"]
 position = Vector2(223.25, 237.5)
