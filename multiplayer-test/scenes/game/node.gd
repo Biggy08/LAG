@@ -152,42 +152,77 @@ func get_local_player():
 			return player
 	return null
 
+#Teleport to map1
 
-# Teleport to map2
-func _on_map_2_pressed() -> void:
-	AudioManager.click_sound()
-	Globals.current_map = 2
-	print("Map 2 was pressed")
+@rpc("any_peer", "call_local")
+func teleport_all_players_to_map1():
+	Globals.current_map = 1
+	print("Map 1 was pressed via RPC")
 	print("Current Map : " + str(Globals.current_map))
 
-	var local_player:Player = get_local_player()
+	var local_player: Player = get_local_player()
 	if local_player:
-		var spawn_points = [
+		var spawn_points1 = [
+			$TextureRect3/Map1/Map1Spawn1,
+			$TextureRect3/Map1/Map1Spawn2,
+			$TextureRect3/Map1/Map1Spawn3,
+			$TextureRect3/Map1/Map1Spawn4,
+			$TextureRect3/Map1/Map1Spawn5
+		]
+		var spawn: Marker2D = spawn_points1.pick_random()
+		local_player.rpc_teleport_to_position(spawn.global_position)
+
+func _on_map_1_pressed() -> void:
+	AudioManager.click_sound()
+	rpc("teleport_all_players_to_map1")
+
+
+# Teleport to map2
+@rpc("any_peer","call_local")  #any_peer for clients  #call_local for host device
+func teleport_all_players_to_map2():
+	Globals.current_map = 2
+	print("Map 2 was pressed via RPC")
+	print("Current Map : " + str(Globals.current_map))
+
+	var local_player: Player = get_local_player()
+	if local_player:
+		var spawn_points2 = [
 			$TextureRect2/Map2/Map2Spawn1,
 			$TextureRect2/Map2/Map2Spawn2,
 			$TextureRect2/Map2/Map2Spawn3,
 			$TextureRect2/Map2/Map2Spawn4,
 			$TextureRect2/Map2/Map2Spawn5
 		]
-		var spawn: Marker2D = spawn_points.pick_random()
-
+		var spawn: Marker2D = spawn_points2.pick_random()
 		local_player.rpc_teleport_to_position(spawn.global_position)
 
+func _on_map_2_pressed() -> void:
+	AudioManager.click_sound()
+	rpc("teleport_all_players_to_map2")
+
+
 			
+			
+func get_random_map1_spawnpoint():
+	print("Respawn Updated to map2")
+	var spawn_points1 = [
+			$TextureRect3/Map1/Map1Spawn1,
+			$TextureRect3/Map1/Map1Spawn2,
+			$TextureRect3/Map1/Map1Spawn3,
+			$TextureRect3/Map1/Map1Spawn4,
+			$TextureRect3/Map1/Map1Spawn5
+		]
+	var spawn: Marker2D = spawn_points1.pick_random()
+	return spawn.global_position
 			
 func get_random_map2_spawnpoint():
 	print("Respawn Updated to map2")
-	var spawn_points = [
+	var spawn_points2 = [
 		$TextureRect2/Map2/Map2Spawn1,
 		$TextureRect2/Map2/Map2Spawn2,
 		$TextureRect2/Map2/Map2Spawn3,
 		$TextureRect2/Map2/Map2Spawn4,
 		$TextureRect2/Map2/Map2Spawn5
 	]
-	var spawn: Marker2D = spawn_points.pick_random()
+	var spawn: Marker2D = spawn_points2.pick_random()
 	return spawn.global_position
-
-
-
-
-	

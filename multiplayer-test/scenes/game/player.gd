@@ -149,10 +149,14 @@ func take_damage(amount):
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
 		health = MAX_HEALTH
-		if Globals.current_map == 2:
-			global_position = game.get_random_map2_spawnpoint()
-		else:
+		
+		if Globals.current_map ==0:
 			global_position = game.get_random_spawnpoint()
+		elif Globals.current_map == 1:
+			global_position = game.get_random_map1_spawnpoint()
+		elif Globals.current_map == 2:
+			global_position = game.get_random_map2_spawnpoint()
+		
 
 		sync_respawn.rpc(global_position)
 

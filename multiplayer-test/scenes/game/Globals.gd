@@ -1,4 +1,4 @@
 # Globals.gd
 extends Node
 
-var current_map = 1  # Default value
+var current_map = 0  # Default value
