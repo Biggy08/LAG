@@ -1,14 +1,17 @@
+#Bullet Code
 extends Area2D
 
-var speed = 1000  # You can adjust the bullet speed
 
+var speed = 1000  # Bullet Speed
 var dmg = 20  # Damage when bullet hits a player
 
+#Bullet Speed and Direction
 func _physics_process(delta):
 	
 	position += Vector2.RIGHT.rotated(rotation) * speed * delta
 
 	
+# Bullet Hitting the player body
 func _on_body_entered(body: Node2D):
 	if !is_multiplayer_authority():
 		return
@@ -25,6 +28,7 @@ func _on_body_entered(body: Node2D):
 
 
 
+# Bullet Despawn  after hitting the player 
 @rpc("call_local")
 func remove_bullet():
 	queue_free()
