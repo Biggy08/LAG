@@ -1,3 +1,4 @@
 # LAG (with Multiplayer)
 
-Small Reference of LAG  to test multiplayer
+Started of as a small reference of the original game WITH working multiplayer connectivity.
+Now is the main project we're working ON.
