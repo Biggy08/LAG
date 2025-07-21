@@ -14,10 +14,15 @@ func _on_body_entered(body: Node2D):
 		return
 
 	if body is Player:
-		# Tell the player's authority to process damage
-		body.take_damage.rpc_id(body.get_multiplayer_authority(), dmg)
+		var shooter_id = get_multiplayer_authority()
+		var target_id = body.get_multiplayer_authority()
+
+		if shooter_id != target_id:
+			# Only tell other players to take damage
+			body.take_damage.rpc_id(target_id, dmg)
 
 	remove_bullet.rpc()
+
 
 
 @rpc("call_local")
