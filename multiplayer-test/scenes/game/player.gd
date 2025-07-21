@@ -12,9 +12,9 @@ const SHOOT_COOLDOWN = 0.2
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
 @onready var sprite_2d = $Sprite2D
-@onready var sfx_death = $sfx_death
-@onready var sfx_respawn = $sfx_respawn
-@onready var sfx_shoot_1 = $sfx_shoot1
+@onready var sfx_death = $"Audio Node 2D/sfx_death"
+@onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
+@onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
 @onready var health_bar = $HealthBar
 @onready var muzzle = $GunContainer/GunSprite/Muzzle
 
@@ -97,8 +97,8 @@ func _physics_process(delta: float) -> void:
 		sprite_2d.animation = "jumping"
 	elif abs(velocity.x) > 1:
 		sprite_2d.animation = "running"
-		if not $sfx_run.playing:
-			$sfx_run.play()
+		if not $"Audio Node 2D/sfx_run".playing:
+			$"Audio Node 2D/sfx_run".play()
 	else:
 		sprite_2d.animation = "idle"
 
@@ -115,7 +115,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-		$sfx_jump.play()
+		$"Audio Node 2D/sfx_jump".play()
 
 func set_camera_limits(left: int, right: int, top: int, bottom: int):
 	cam.limit_left = left
@@ -125,7 +125,7 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 
 @rpc("call_local")
 func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
-	$sfx_shoot1.play()
+	$"Audio Node 2D/sfx_shoot1".play()
 	print("🛠 Bullet spawned on", name, "| Owner:", shooter_pid, "| pos:", pos, "| rot:", rot)
 	var bullet = BULLET.instantiate()
 	bullet.set_multiplayer_authority(shooter_pid)

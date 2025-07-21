@@ -287,22 +287,24 @@ texture = ExtResource("8_m5ugi")
 [node name="Muzzle" type="Marker2D" parent="GunContainer/GunSprite"]
 position = Vector2(261.225, -62.0607)
 
-[node name="sfx_run" type="AudioStreamPlayer2D" parent="."]
+[node name="Audio Node 2D" type="Node2D" parent="."]
+
+[node name="sfx_run" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 stream = ExtResource("6_121pn")
 volume_db = 0.12
 pitch_scale = 5.91
 autoplay = true
 
-[node name="sfx_jump" type="AudioStreamPlayer2D" parent="."]
+[node name="sfx_jump" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 stream = ExtResource("7_rxiur")
 
-[node name="sfx_death" type="AudioStreamPlayer2D" parent="."]
+[node name="sfx_death" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 stream = ExtResource("9_bnwh7")
 
-[node name="sfx_respawn" type="AudioStreamPlayer2D" parent="."]
+[node name="sfx_respawn" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 stream = ExtResource("10_dsw4c")
 
-[node name="sfx_shoot1" type="AudioStreamPlayer2D" parent="."]
+[node name="sfx_shoot1" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 visible = false
 stream = ExtResource("6_121pn")
 
