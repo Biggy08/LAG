@@ -626,7 +626,9 @@ stream = ExtResource("4_bhoiw")
 stream = ExtResource("6_ubwsr")
 
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
+[connection signal="visibility_changed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
+[connection signal="visibility_changed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_visibility_changed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="UI/Back/Back" to="." method="_on_back_pressed"]

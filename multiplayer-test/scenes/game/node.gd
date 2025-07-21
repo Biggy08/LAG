@@ -12,7 +12,9 @@ var players: Array[Player] = []
 func _ready():
 	add_to_group("Game")
 	$MultiplayerSpawner.spawn_function = add_player
-	host_ip_label.hide() 
+	host_ip_label.hide()   #hides ip label for clients 
+	
+	
 	
 # Get Valid LAN IP (Android + PC)
 func get_valid_lan_ip() -> String:
@@ -64,6 +66,7 @@ func _on_host_pressed() -> void:
 #  JOIN
 func _on_join_pressed() -> void:
 	$sound_click.play()
+	$UI/MapSelection.hide()  # hide map selection for client players
 
 	var input_field = multiplayer_ui.get_node("MarginContainer/VBoxContainer/HostIPField")
 	var ip_address = input_field.text.strip_edges()
@@ -226,3 +229,14 @@ func get_random_map2_spawnpoint():
 	]
 	var spawn: Marker2D = spawn_points2.pick_random()
 	return spawn.global_position
+
+
+
+
+
+func _on_map_1_visibility_changed() -> void:
+	pass # Replace with function body.
+
+
+func _on_map_2_visibility_changed() -> void:
+	pass # Replace with function body.
