@@ -71,7 +71,7 @@ func _on_join_pressed() -> void:
 	var input_field = multiplayer_ui.get_node("MarginContainer/VBoxContainer/HostIPField")
 	var ip_address = input_field.text.strip_edges()
 	if ip_address == "":
-		ip_address = "192.168.1.5"  # Fallback for test
+		ip_address = "192.168.1.67"  # Fallback for test
 
 	print("🔌 Connecting to host at: ", ip_address)
 
