@@ -4,7 +4,7 @@ extends Node
 @onready var multiplayer_ui = $UI/Multiplayer
 @onready var host_ip_label = $UI/HostIPLabel
 
-const PLAYER = preload("res://scenes/game/player.tscn")
+var PLAYER = preload("res://scenes/game/player.tscn")
 
 var peer = ENetMultiplayerPeer.new()
 var players: Array[Player] = []
@@ -71,7 +71,7 @@ func _on_join_pressed() -> void:
 	var input_field = multiplayer_ui.get_node("MarginContainer/VBoxContainer/HostIPField")
 	var ip_address = input_field.text.strip_edges()
 	if ip_address == "":
-		ip_address = "192.168.1.5"  # Fallback for test
+		ip_address = "192.168.1.67"  # Fallback for test
 
 	print("🔌 Connecting to host at: ", ip_address)
 
@@ -233,10 +233,9 @@ func get_random_map2_spawnpoint():
 
 
 
+func _on_char_1_pressed() -> void:
+	pass
 
-func _on_map_1_visibility_changed() -> void:
-	pass # Replace with function body.
 
-
-func _on_map_2_visibility_changed() -> void:
+func _on_char_2_pressed() -> void:
 	pass # Replace with function body.

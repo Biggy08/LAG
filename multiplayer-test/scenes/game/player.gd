@@ -11,7 +11,11 @@ const SHOOT_COOLDOWN = 0.2
 
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
+#Player 
 @onready var sprite_2d = $Sprite2D
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+
+
 @onready var sfx_death = $"Audio Node 2D/sfx_death"
 @onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
 @onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
@@ -144,7 +148,7 @@ func take_damage(amount):
 		sync_hide.rpc()
 		sfx_death.play()
 		set_physics_process(false)
-		$CollisionShape2D.disabled = true
+		collision_shape_2d.disabled = true
 
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
@@ -164,7 +168,7 @@ func take_damage(amount):
 func sync_hide():
 	hide()
 	set_physics_process(false)
-	$CollisionShape2D.disabled = true
+	collision_shape_2d.disabled = true
 
 
 
@@ -176,7 +180,7 @@ func sync_respawn(pos: Vector2):
 	health_bar.value = health
 	show()
 	set_physics_process(true)
-	$CollisionShape2D.disabled = false
+	collision_shape_2d.disabled = false
 	sfx_respawn.play()
 	
 	

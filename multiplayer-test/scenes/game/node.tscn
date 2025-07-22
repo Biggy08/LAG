@@ -517,6 +517,12 @@ position = Vector2(394.75, 224)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
+[node name="HostIPLabel" type="Label" parent="UI"]
+offset_left = 5.0
+offset_top = 40.0
+offset_right = 171.0
+offset_bottom = 63.0
+
 [node name="MapSelection" type="Control" parent="UI"]
 layout_mode = 3
 anchors_preset = 1
@@ -552,11 +558,42 @@ theme_override_font_sizes/font_size = 30
 text = "Map2
 "
 
-[node name="HostIPLabel" type="Label" parent="UI"]
-offset_left = 5.0
-offset_top = 40.0
-offset_right = 171.0
-offset_bottom = 63.0
+[node name="CharSelect" type="Control" parent="UI"]
+layout_mode = 3
+anchor_left = 0.767
+anchor_top = 0.289
+anchor_right = 0.975
+anchor_bottom = 0.5
+offset_left = 2.39996
+offset_top = -0.0500031
+offset_right = 2.0
+offset_bottom = 6.0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/CharSelect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.192498
+anchor_top = 0.218151
+anchor_right = 0.913848
+anchor_bottom = 0.915899
+offset_left = 0.0779877
+offset_top = 0.0399933
+offset_right = -0.0280151
+offset_bottom = 0.00799561
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/CharSelect/MarginContainer"]
+layout_mode = 2
+
+[node name="Char1" type="Button" parent="UI/CharSelect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Character 1"
+
+[node name="Char2" type="Button" parent="UI/CharSelect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Character  2"
 
 [node name="Multiplayer" type="Control" parent="UI"]
 custom_minimum_size = Vector2(10, 10)
@@ -626,9 +663,9 @@ stream = ExtResource("4_bhoiw")
 stream = ExtResource("6_ubwsr")
 
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
-[connection signal="visibility_changed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
 [connection signal="pressed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
-[connection signal="visibility_changed" from="UI/MapSelection/MarginContainer/VBoxContainer/Map2" to="." method="_on_map_2_visibility_changed"]
+[connection signal="pressed" from="UI/CharSelect/MarginContainer/VBoxContainer/Char1" to="." method="_on_char_1_pressed"]
+[connection signal="pressed" from="UI/CharSelect/MarginContainer/VBoxContainer/Char2" to="." method="_on_char_2_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="UI/Back/Back" to="." method="_on_back_pressed"]
