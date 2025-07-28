@@ -6,6 +6,8 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 const MAX_HEALTH = 100
+var kills: int = 0
+var deaths: int = 0
 const RESPAWN_TIME = 3
 const SHOOT_COOLDOWN = 0.2
 
@@ -28,7 +30,9 @@ var can_shoot = true
 var joystick_connected = false
 
 func _enter_tree():
+	add_to_group("Player")
 	set_multiplayer_authority(int(str(name)))
+	
 
 func _ready():
 	cam = $Camera2D
@@ -53,17 +57,17 @@ func _connect_joystick():
 	if aim_joystick and not joystick_connected:
 		aim_joystick.connect("shoot", Callable(self, "_on_AimJoystick_shoot"))
 		joystick_connected = true
-		print(" Joystick signal connected via call_deferred →", name)
+		#print(" Joystick signal connected via call_deferred →", name)
 	else:
 		print("Joystick not found or already connected →", name)
 
 func _on_AimJoystick_shoot(direction: Vector2):
-	print(" Joystick SHOOT signal received on", name, "| authority?", is_multiplayer_authority())
+	#print(" Joystick SHOOT signal received on", name, "| authority?", is_multiplayer_authority())
 	shoot_in_direction(direction)
 
 func shoot_in_direction(direction: Vector2) -> void:
 	if not can_shoot:
-		print(" Can't shoot — on cooldown →", name)
+		#print(" Can't shoot — on cooldown →", name)
 		return
 
 	print("SHOOTING from", name, "| Direction:", direction)
@@ -72,7 +76,7 @@ func shoot_in_direction(direction: Vector2) -> void:
 	if is_multiplayer_authority():
 		var pos = muzzle.global_position
 		var rot = direction.angle()
-		print("Spawning bullet from", name, "at", pos, "| angle:", rot)
+		#print("Spawning bullet from", name, "at", pos, "| angle:", rot)
 		spawn_bullet.rpc(pos, rot, multiplayer.get_unique_id())
 	else:
 		print(" Not authority in shoot_in_direction →", name)
@@ -126,7 +130,7 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 @rpc("call_local")
 func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
 	$"Audio Node 2D/sfx_shoot1".play()
-	print("🛠 Bullet spawned on", name, "| Owner:", shooter_pid, "| pos:", pos, "| rot:", rot)
+	#print("🛠 Bullet spawned on", name, "| Owner:", shooter_pid, "| pos:", pos, "| rot:", rot)
 	var bullet = BULLET.instantiate()
 	bullet.set_multiplayer_authority(shooter_pid)
 	bullet.global_position = pos
@@ -134,13 +138,21 @@ func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
 	get_parent().add_child(bullet)
 
 @rpc("any_peer")
-func take_damage(amount):
+func take_damage(amount: int, shooter_pid: int = -1):
 	print("💥", name, "took damage:", amount)
 	health -= amount
 	health_bar.value = health
 
 	if health <= 0:
+		deaths += 1
 		print("☠️", name, "died")
+		
+		# Award kill to the shooter
+		if shooter_pid != -1:
+			var shooter = game.get_node_or_null(str(shooter_pid))
+			if shooter and shooter.has_method("add_kill"):
+				shooter.add_kill()
+		
 		sync_hide.rpc()
 		sfx_death.play()
 		set_physics_process(false)
@@ -192,3 +204,7 @@ func rpc_teleport_to_position(pos: Vector2):
 func teleport_to_position(pos: Vector2):
 	global_position = pos
 	reset_on_teleport()
+
+func add_kill():
+	kills += 1
+	print("💀 Kill added for", name, "→ Total kills:", kills)

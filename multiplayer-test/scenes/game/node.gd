@@ -1,8 +1,14 @@
 class_name Game #for simplifications (like type hints)
 extends Node
 
+@export var match_duration := 15 # seconds
+var match_time_left := match_duration
+var match_timer := Timer.new()
+
 @onready var multiplayer_ui = $UI/Multiplayer
 @onready var host_ip_label = $UI/HostIPLabel
+@onready var game_timer_label = $UI/GameTimer
+@onready var scoreboard_label = $UI/Scoreboard
 
 const PLAYER = preload("res://scenes/game/player.tscn")
 
@@ -30,6 +36,58 @@ func get_valid_lan_ip() -> String:
 	else:
 		print("No valid LAN IP found. All IPs: ", IP.get_local_addresses())
 		return "IP_NOT_FOUND"
+
+func update_match_timer():
+	match_time_left -= 1
+	update_timer_label.rpc("⏱️ " + str(match_time_left))
+
+	if match_time_left <= 0:
+		match_timer.stop()
+		game_timer_label.hide()
+		show_scoreboard()
+		
+@rpc("authority", "call_local")
+func update_timer_label(text: String):
+	game_timer_label.text = text
+	game_timer_label.show()
+	
+func start_match():
+	match_time_left = match_duration
+	game_timer_label.text = "⏱️ " + str(match_time_left)
+	game_timer_label.show()
+
+	match_timer.wait_time = 1
+	match_timer.timeout.connect(update_match_timer)
+	match_timer.autostart = true
+	match_timer.one_shot = false
+	if match_timer.get_parent():
+		match_timer.queue_free()
+		match_timer = Timer.new()
+	add_child(match_timer)
+	match_timer.start()
+	
+func show_scoreboard():
+	var winner = ""
+	var max_kills = -1
+	var text = "[center][b]🏁 Match Over![/b][/center]\n\n"
+
+	for p in get_tree().get_nodes_in_group("Player"):
+		# Debug log
+		print("✅ Player", p.name, "→ Kills:", p.kills, "Deaths:", p.deaths)
+
+		text += "🎮 Player %s: %d Kills | %d Deaths\n" % [p.name, p.kills, p.deaths]
+
+		if p.kills > max_kills:
+			max_kills = p.kills
+			winner = p.name
+
+	text += "\n[center][color=gold]🏆 Winner: %s[/color][/center]" % winner
+	show_scoreboard_rpc.rpc(text)
+	
+@rpc("authority", "call_local")
+func show_scoreboard_rpc(text: String):
+	scoreboard_label.text = text
+	scoreboard_label.show()
 
 
 # HOST
@@ -178,8 +236,9 @@ func teleport_all_players_to_map1():
 func _on_map_1_pressed() -> void:
 	AudioManager.click_sound()
 	rpc("teleport_all_players_to_map1")
-
-
+	start_match()
+	$UI/MapSelection.hide()
+	
 # Teleport to map2
 @rpc("any_peer","call_local")  #any_peer for clients  #call_local for host device
 func teleport_all_players_to_map2():
@@ -202,8 +261,8 @@ func teleport_all_players_to_map2():
 func _on_map_2_pressed() -> void:
 	AudioManager.click_sound()
 	rpc("teleport_all_players_to_map2")
-
-
+	start_match()
+	$UI/MapSelection.hide()
 			
 			
 func get_random_map1_spawnpoint():

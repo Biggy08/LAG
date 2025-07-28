@@ -22,7 +22,7 @@ func _on_body_entered(body: Node2D):
 
 		if shooter_id != target_id:
 			# Only tell other players to take damage
-			body.take_damage.rpc_id(target_id, dmg)
+			body.take_damage.rpc_id(target_id, dmg, shooter_id)
 
 	remove_bullet.rpc()
 
