@@ -37,8 +37,17 @@ func _enter_tree():
 
 func _ready():
 	cam = $Camera2D
-	print(name, "| multiplayer authority?", is_multiplayer_authority(), "| My ID:", multiplayer.get_unique_id())
-	if is_multiplayer_authority():
+	var my_id = str(multiplayer.get_unique_id())
+	if name == my_id:
+		is_local_player = true
+		print("✅ This is the local player:", name)
+		health_bar.visible = true
+	else:
+		is_local_player = false
+		print("❌ This is a remote player:", name)
+		health_bar.visible = false
+
+	if is_local_player:
 		$"CanvasLayer/Control/Aim Joystick".visible = true
 		call_deferred("_connect_joystick")
 		cam.enabled = true
@@ -139,12 +148,21 @@ func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
 	bullet.global_position = pos
 	bullet.rotation = rot
 	get_parent().add_child(bullet)
+	
+@rpc("any_peer", "call_local")
+func update_health_bar(new_health: int):
+	health = new_health
+	health_bar.max_value = MAX_HEALTH  # make sure it's correct
+	health_bar.value = health
+	print("🩸 Health updated on", name, "→", new_health)
+	print("🩸 Bar node info → max:", health_bar.max_value, "val:", health_bar.value, "visible:", health_bar.visible)
 
 @rpc("any_peer")
 func take_damage(amount: int, shooter_pid: int = -1):
 	print("💥", name, "took damage:", amount)
 	health -= amount
-
+	update_health_bar.rpc_id(get_multiplayer_authority(), health)
+	
 	if health <= 0:
 		sync_hide.rpc()
 		sfx_death.play()
@@ -164,6 +182,7 @@ func take_damage(amount: int, shooter_pid: int = -1):
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
 		health = MAX_HEALTH
+		update_health_bar.rpc_id(get_multiplayer_authority(), health)
 		
 		if Globals.current_map ==0:
 			global_position = game.get_random_spawnpoint()
@@ -191,7 +210,7 @@ func sync_respawn(pos: Vector2):
 	print(name,"  respawned at ", Globals.current_map)
 	global_position = pos
 	health = MAX_HEALTH
-	health_bar.value = health
+	update_health_bar(health)
 	show()
 	set_physics_process(true)
 	$CollisionShape2D.disabled = false
@@ -214,7 +233,3 @@ func teleport_to_position(pos: Vector2):
 func add_kill():
 	if multiplayer.is_server():
 		game.register_kill(int(name))
-
-func _process(delta):
-	if name == str(multiplayer.get_unique_id()):
-		health_bar.value = health
