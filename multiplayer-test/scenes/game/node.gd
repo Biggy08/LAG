@@ -45,6 +45,22 @@ func update_match_timer():
 	if match_time_left <= 0:
 		match_timer.stop()
 		game_timer_label.hide()
+		host_ip_label.hide()
+		
+		# 🎮 Hide joysticks from the local player
+		var pid = get_safe_unique_id()
+		if pid != -1:
+			var player_node = get_node_or_null(str(pid))
+			if player_node:
+				var joystick_path = "CanvasLayer/Control"
+				var joystick_container = player_node.get_node_or_null(joystick_path)
+				if joystick_container:
+					# Hide both joysticks
+					if joystick_container.has_node("Virtual Joystick"):
+						joystick_container.get_node("Virtual Joystick").visible = false
+					if joystick_container.has_node("Aim Joystick"):
+						joystick_container.get_node("Aim Joystick").visible = false
+		
 		show_scoreboard(player_stats) # ← Local call for host
 		show_scoreboard.rpc(player_stats) # ← RPC for clients	
 		
@@ -55,17 +71,113 @@ func update_timer_label(text: String):
 	game_timer_label.text = text
 	game_timer_label.show()
 
+
+
 @rpc("reliable")
 func show_scoreboard(stats: Dictionary):
 	var container = $UI/ScoreboardBox/PlayerStatsContainer
+	
+	if not is_instance_valid(container):
+		push_error("PlayerStatsContainer missing!")
+		return
+
+	# Keep header, delete dynamic rows
 	for child in container.get_children():
 		child.queue_free()
 
+	# ➕ Add Header Row
+	var header = HBoxContainer.new()
+	header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_theme_constant_override("separation", 40)
+
+	var player_header = Label.new()
+	player_header.text = "Player"
+	player_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	player_header.custom_minimum_size = Vector2(200, 0)
+	player_header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	player_header.add_theme_color_override("font_color", Color.SKY_BLUE)
+
+	var kills_header = Label.new()
+	kills_header.text = "Kills"
+	kills_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	kills_header.custom_minimum_size = Vector2(80, 0)
+	kills_header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kills_header.add_theme_color_override("font_color", Color.SKY_BLUE)
+
+	var deaths_header = Label.new()
+	deaths_header.text = "Deaths"
+	deaths_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	deaths_header.custom_minimum_size = Vector2(80, 0)
+	deaths_header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	deaths_header.add_theme_color_override("font_color", Color.SKY_BLUE)
+
+	header.add_child(player_header)
+	header.add_child(kills_header)
+	header.add_child(deaths_header)
+	container.add_child(header)
+
+	# Track max kills for winner
+	var max_kills = -1
+	var winners = []
+
+	
 	for pid in stats.keys():
 		var data = stats[pid]
-		var entry = Label.new()
-		entry.text = "Player %s - Kills: %d | Deaths: %d" % [pid, data["kills"], data["deaths"]]
-		container.add_child(entry)
+		var kills = data["kills"]
+
+		# Update winner tracking
+		if kills > max_kills:
+			max_kills = kills
+			winners = [pid]
+		elif kills == max_kills:
+			winners.append(pid)
+
+		var row = HBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_theme_constant_override("separation", 40)
+
+		var name_label = Label.new()
+		name_label.text = "Player %s" % str(pid)
+		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_label.custom_minimum_size = Vector2(200, 0)
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_label.add_theme_color_override("font_color", Color.WHITE)
+
+		var kill_label = Label.new()
+		kill_label.text = str(data["kills"])
+		kill_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		kill_label.custom_minimum_size = Vector2(80, 0)
+		kill_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		kill_label.add_theme_color_override("font_color", Color.GREEN)
+
+		var death_label = Label.new()
+		death_label.text = str(data["deaths"])
+		death_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		death_label.custom_minimum_size = Vector2(80, 0)
+		death_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		death_label.add_theme_color_override("font_color", Color.RED)
+
+		row.add_child(name_label)
+		row.add_child(kill_label)
+		row.add_child(death_label)
+		container.add_child(row)
+	
+	# 🏆 Show winner
+	var winner_label = Label.new()
+	winner_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	winner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	winner_label.add_theme_font_size_override("font_size", 20)
+	winner_label.add_theme_color_override("font_color", Color.YELLOW)
+
+	if winners.size() == 1:
+		winner_label.text = "🏆 Winner: Player %s " % [str(winners[0])]
+	else:
+		var names = []
+		for pid in winners:
+			names.append("Player %s" % str(pid))
+		winner_label.text = "🏆 Tie! %s " % [", ".join(names)]
+
+	container.add_child(winner_label)
 
 	$UI/ScoreboardBox.show()
 

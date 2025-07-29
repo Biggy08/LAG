@@ -396,7 +396,7 @@ sources/0 = SubResource("TileSetAtlasSource_fgdjn")
 
 [node name="game" type="Node"]
 script = ExtResource("1_xk3sj")
-match_duration = 20
+match_duration = 2
 
 [node name="Message" type="Label" parent="."]
 anchors_preset = 5
@@ -520,14 +520,52 @@ position = Vector2(394.75, 224)
 
 [node name="ScoreboardBox" type="Control" parent="UI"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="UI/ScoreboardBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0214346, 0.0214346, 0.0214346, 1)
+
+[node name="Label" type="Label" parent="UI/ScoreboardBox"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -189.0
+offset_top = 54.0
+offset_right = 226.0
+offset_bottom = 157.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0.976524, 0.977934, 0.981787, 1)
+theme_override_font_sizes/font_size = 75
+text = "Scoreboard"
+horizontal_alignment = 1
 
 [node name="PlayerStatsContainer" type="VBoxContainer" parent="UI/ScoreboardBox"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
 
 [node name="GameTimer" type="Label" parent="UI"]
 anchors_preset = 1
