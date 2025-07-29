@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=27 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
@@ -11,6 +11,9 @@
 [ext_resource type="AudioStream" uid="uid://2ef0g0domd11" path="res://assets/sounds/menu_sounds/join.mp3" id="6_ubwsr"]
 [ext_resource type="StyleBox" uid="uid://0q5r1xvo0dwk" path="res://assets/UI/Button/new_style_box_flat.tres" id="7_6ipyb"]
 [ext_resource type="Texture2D" uid="uid://c5gls6ychbrkm" path="res://assets/UI/Button/map2.png" id="7_jqqd6"]
+[ext_resource type="Texture2D" uid="uid://buuydpe7kh1v6" path="res://assets/menu/Host.png" id="10_jqqd6"]
+[ext_resource type="Texture2D" uid="uid://c8t6uniybsysr" path="res://assets/menu/Join.png" id="11_2ocsm"]
+[ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="12_vno2n"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
 texture = ExtResource("3_kdpyv")
@@ -398,6 +401,14 @@ texture = ExtResource("3_kdpyv")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_fgdjn")
 
+[sub_resource type="LabelSettings" id="LabelSettings_vno2n"]
+font_size = 25
+outline_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_2ocsm"]
+font_size = 60
+outline_size = 5
+
 [sub_resource type="SystemFont" id="SystemFont_mypp5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fxnns"]
@@ -633,27 +644,27 @@ offset_left = -40.0
 offset_bottom = 40.0
 grow_horizontal = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MapSelection"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MapSelection"]
 layout_mode = 2
-offset_left = -655.0
-offset_top = 171.0
-offset_right = -277.0
-offset_bottom = 263.0
+offset_left = -101.0
+offset_top = 7.0
+offset_right = 14.0
+offset_bottom = 291.0
 scale = Vector2(1.16528, 1.21222)
 theme_override_constants/separation = 100
 
-[node name="Map1" type="Button" parent="UI/MapSelection/HBoxContainer"]
+[node name="Map1" type="Button" parent="UI/MapSelection/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/icon_max_width = 300
 theme_override_font_sizes/font_size = 30
 theme_override_icons/icon = ExtResource("6_fxnns")
-text = "Map1
+text = "Map 1
 "
 icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
 
-[node name="Map2" type="Button" parent="UI/MapSelection/HBoxContainer"]
+[node name="Map2" type="Button" parent="UI/MapSelection/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Map2
@@ -668,6 +679,7 @@ offset_left = 5.0
 offset_top = 40.0
 offset_right = 171.0
 offset_bottom = 63.0
+label_settings = SubResource("LabelSettings_vno2n")
 
 [node name="Multiplayer" type="Control" parent="UI"]
 custom_minimum_size = Vector2(10, 10)
@@ -685,29 +697,35 @@ scale = Vector2(0.966794, 0.824379)
 
 [node name="ColorRect" type="ColorRect" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 208.0
-offset_top = 18.0
-offset_right = 1043.0
-offset_bottom = 567.0
+offset_left = 209.972
+offset_top = -7.27821
+offset_right = 1044.97
+offset_bottom = 541.722
 scale = Vector2(1.44728, 1.44044)
-color = Color(0.0768358, 0.0768358, 0.0768358, 1)
+color = Color(0, 0, 0, 1)
+
+[node name="Username Label" type="Label" parent="UI/Multiplayer"]
+layout_mode = 2
+offset_left = 237.9
+offset_top = 184.381
+offset_right = 578.9
+offset_bottom = 267.381
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Username:"
+label_settings = SubResource("LabelSettings_2ocsm")
+uppercase = true
 
 [node name="Username" type="VBoxContainer" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 275.136
-offset_top = 243.82
-offset_right = 1110.14
-offset_bottom = 792.82
+offset_left = 238.0
+offset_top = 291.0
+offset_right = 1126.0
+offset_bottom = 368.0
+grow_vertical = 2
 scale = Vector2(0.499837, 1.48977)
 theme = SubResource("Theme_jqqd6")
-theme_override_constants/separation = 17
-
-[node name="label" type="Label" parent="UI/Multiplayer/Username"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 30
-text = "Username:"
+theme_override_constants/separation = 23
 
 [node name="UsernameInput" type="LineEdit" parent="UI/Multiplayer/Username"]
 layout_mode = 2
@@ -715,38 +733,44 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Multiplayer"]
-layout_mode = 2
-offset_left = 902.984
-offset_top = 197.725
-offset_right = 1737.98
-offset_bottom = 746.725
-scale = Vector2(0.499837, 1.48977)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -79.0
+offset_top = -109.0
+offset_right = 802.0
+offset_bottom = 291.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.3, 0.894)
 theme = SubResource("Theme_jqqd6")
 theme_override_constants/separation = 17
 
-[node name="Host" type="Button" parent="UI/Multiplayer/VBoxContainer"]
+[node name="Host" type="TextureButton" parent="UI/Multiplayer/VBoxContainer"]
 custom_minimum_size = Vector2(400, -800)
+layout_direction = 1
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/font_size = 41
-text = "Host"
-expand_icon = true
+size_flags_horizontal = 5
+size_flags_vertical = 2
+texture_normal = ExtResource("10_jqqd6")
+stretch_mode = 0
 
 [node name="HostIPField" type="LineEdit" parent="UI/Multiplayer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 5
+size_flags_vertical = 2
 theme_override_font_sizes/font_size = 30
 
-[node name="Join" type="Button" parent="UI/Multiplayer/VBoxContainer"]
+[node name="Join" type="TextureButton" parent="UI/Multiplayer/VBoxContainer"]
 custom_minimum_size = Vector2(400, -500)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_font_sizes/font_size = 41
-text = "Join"
-expand_icon = true
+size_flags_horizontal = 5
+size_flags_vertical = 2
+texture_normal = ExtResource("11_2ocsm")
+stretch_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Multiplayer"]
 layout_mode = 0
@@ -760,19 +784,20 @@ offset_left = -27.0
 offset_right = 13.0
 offset_bottom = 40.0
 
-[node name="Back" type="Button" parent="UI/Back"]
+[node name="Back" type="TextureButton" parent="UI/Back"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 496.0
-offset_right = 662.0
-offset_bottom = 50.0
+offset_left = 509.0
+offset_top = -3.0
+offset_right = 891.0
+offset_bottom = 155.0
 grow_horizontal = 2
+scale = Vector2(0.35, 0.35)
 theme = SubResource("Theme_fxnns")
-theme_override_font_sizes/font_size = 30
-text = "Back
-"
+texture_normal = ExtResource("12_vno2n")
+stretch_mode = 0
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://c5won7nctd8y6")
@@ -785,10 +810,10 @@ stream = ExtResource("4_bhoiw")
 [node name="sfx_join" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ubwsr")
 
-[connection signal="pressed" from="UI/MapSelection/HBoxContainer/Map1" to="." method="_on_map_1_pressed"]
-[connection signal="visibility_changed" from="UI/MapSelection/HBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
-[connection signal="pressed" from="UI/MapSelection/HBoxContainer/Map2" to="." method="_on_map_2_pressed"]
-[connection signal="visibility_changed" from="UI/MapSelection/HBoxContainer/Map2" to="." method="_on_map_2_visibility_changed"]
+[connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
+[connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
+[connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
+[connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map2" to="." method="_on_map_2_visibility_changed"]
 [connection signal="pressed" from="UI/Multiplayer/VBoxContainer/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="UI/Back/Back" to="." method="_on_back_pressed"]
