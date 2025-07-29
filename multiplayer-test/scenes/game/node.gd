@@ -9,6 +9,7 @@ var match_timer := Timer.new()
 @onready var host_ip_label = $UI/HostIPLabel
 @onready var game_timer_label = $UI/GameTimer
 @onready var ScoreboardBox = $UI/ScoreboardBox
+@onready var MapSelection = $UI/MapSelection
 
 const PLAYER = preload("res://scenes/game/player.tscn")
 
@@ -21,6 +22,8 @@ func _ready():
 	$MultiplayerSpawner.spawn_function = add_player
 	host_ip_label.hide()   #hides ip label for clients 
 	ScoreboardBox.visible = false 
+	MapSelection.visible = false
+	multiplayer_ui.visible = true
 	
 	
 # Get Valid LAN IP (Android + PC)
@@ -60,17 +63,32 @@ func update_match_timer():
 						joystick_container.get_node("Virtual Joystick").visible = false
 					if joystick_container.has_node("Aim Joystick"):
 						joystick_container.get_node("Aim Joystick").visible = false
+						
+		hide_local_player_ui.rpc()
 		
 		show_scoreboard(player_stats) # ← Local call for host
 		show_scoreboard.rpc(player_stats) # ← RPC for clients	
 		
 		
+@rpc("authority", "reliable")
+func hide_local_player_ui():
+	var pid = get_safe_unique_id()
+	if pid != -1:
+		var player_node = get_node_or_null(str(pid))
+		if player_node:
+			var joystick_path = "CanvasLayer/Control"
+			var joystick_container = player_node.get_node_or_null(joystick_path)
+			if joystick_container:
+				if joystick_container.has_node("Virtual Joystick"):
+					joystick_container.get_node("Virtual Joystick").visible = false
+				if joystick_container.has_node("Aim Joystick"):
+					joystick_container.get_node("Aim Joystick").visible = false
 		
 @rpc("authority", "call_local")
 func update_timer_label(text: String):
 	game_timer_label.text = text
 	game_timer_label.show()
-
+	
 
 
 @rpc("reliable")
@@ -201,6 +219,8 @@ func start_match():
 func _on_host_pressed() -> void:
 	$sound_click.play()
 	print("🎮 GAME HOSTED")
+	MapSelection.visible = true
+	
 
 	peer.create_server(8848)
 	multiplayer.multiplayer_peer = peer
@@ -233,7 +253,7 @@ func _on_join_pressed() -> void:
 	$sound_click.play()
 	$UI/MapSelection.hide()  # hide map selection for client players
 
-	var input_field = multiplayer_ui.get_node("MarginContainer/VBoxContainer/HostIPField")
+	var input_field = multiplayer_ui.get_node("VBoxContainer/HostIPField")
 	var ip_address = input_field.text.strip_edges()
 	if ip_address == "":
 		ip_address = "192.168.1.67"  # Fallback for test
