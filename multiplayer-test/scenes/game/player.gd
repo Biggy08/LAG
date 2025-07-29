@@ -4,7 +4,7 @@ extends CharacterBody2D
 @onready var cam: Camera2D = $Camera2D
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -500.0
 const MAX_HEALTH = 100
 var kills: int = 0
 var deaths: int = 0
@@ -19,16 +19,16 @@ const BULLET = preload("res://scenes/game/bullet.tscn")
 @onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
 @onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
 @onready var health_bar = $HealthBar
+@onready var NameLabel = $NameLabel
 @onready var muzzle = $GunContainer/GunSprite/Muzzle
-
 @onready var game = get_node("/root/game")
-
 
 
 var health = MAX_HEALTH
 var facing_left = false
 var can_shoot = true
 var joystick_connected = false
+var username: String = "Unnamed"
 
 func _enter_tree():
 	add_to_group("Player")
@@ -38,14 +38,16 @@ func _enter_tree():
 func _ready():
 	cam = $Camera2D
 	var my_id = str(multiplayer.get_unique_id())
+
 	if name == my_id:
 		is_local_player = true
-		print("✅ This is the local player:", name)
 		health_bar.visible = true
 	else:
 		is_local_player = false
-		print("❌ This is a remote player:", name)
 		health_bar.visible = false
+
+	# ✅ Display the username
+	NameLabel.text = username
 
 	if is_local_player:
 		$"CanvasLayer/Control/Aim Joystick".visible = true
@@ -53,16 +55,24 @@ func _ready():
 		cam.enabled = true
 		cam.make_current()
 	else:
-		print("Disabling joystick for remote player:", name)
 		var aim_joystick = $"CanvasLayer/Control/Aim Joystick"
 		aim_joystick.visible = false
 		aim_joystick.set_process_input(false)
 		aim_joystick.set_process(false)
 		sprite_2d.modulate = Color.RED
-		health_bar.visible = false
 		cam.enabled = false
 		
+func set_display_name(name: String):
+	username = name
+	NameLabel.text = username
 
+@rpc("authority", "call_local")
+func sync_username(name: String):
+	set_display_name(name)
+
+@rpc("call_local")
+func update_name_label(username: String):
+	NameLabel.text = username
 
 func _connect_joystick():
 	var aim_joystick = $"CanvasLayer/Control/Aim Joystick"
@@ -97,6 +107,7 @@ func shoot_in_direction(direction: Vector2) -> void:
 	can_shoot = true
 
 var last_direction = 1  # 1 = right, -1 = left
+
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return	
@@ -138,6 +149,7 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 	cam.limit_right = right
 	cam.limit_top = top
 	cam.limit_bottom = bottom
+
 
 @rpc("call_local")
 func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):

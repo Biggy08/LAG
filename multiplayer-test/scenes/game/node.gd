@@ -16,6 +16,7 @@ const PLAYER = preload("res://scenes/game/player.tscn")
 var peer = ENetMultiplayerPeer.new()
 var players: Array[Player] = []
 var player_stats := {} # Dictionary: peer_id -> {kills, deaths}
+var player_usernames: Dictionary = {}
 
 func _ready():
 	add_to_group("Game")
@@ -155,7 +156,7 @@ func show_scoreboard(stats: Dictionary):
 		row.add_theme_constant_override("separation", 40)
 
 		var name_label = Label.new()
-		name_label.text = "Player %s" % str(pid)
+		name_label.text = player_usernames.get(pid, "Unnamed")
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		name_label.custom_minimum_size = Vector2(200, 0)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -187,16 +188,23 @@ func show_scoreboard(stats: Dictionary):
 	winner_label.add_theme_font_size_override("font_size", 20)
 	winner_label.add_theme_color_override("font_color", Color.YELLOW)
 
+	var username_dict = get_node("/root/game").player_usernames
+	
 	if winners.size() == 1:
-		winner_label.text = "🏆 Winner: Player %s " % [str(winners[0])]
+		var winner_name = "Player %s" % str(winners[0])
+		if username_dict.has(winners[0]):
+			winner_name = username_dict[winners[0]]
+		winner_label.text = "🏆 Winner: %s" % winner_name
 	else:
 		var names = []
 		for pid in winners:
-			names.append("Player %s" % str(pid))
-		winner_label.text = "🏆 Tie! %s " % [", ".join(names)]
+			var name = "Player %s" % str(pid)
+			if username_dict.has(pid):
+				name = username_dict[pid]
+			names.append(name)
+		winner_label.text = "🏆 Tie! %s" % [", ".join(names)]
 
 	container.add_child(winner_label)
-
 	$UI/ScoreboardBox.show()
 
 func start_match():
@@ -219,9 +227,14 @@ func start_match():
 func _on_host_pressed() -> void:
 	$sound_click.play()
 	print("🎮 GAME HOSTED")
+	
+	# Capture and store the username from the input field
+	Globals.local_username = multiplayer_ui.get_node("Username/UsernameInput").text.strip_edges()
+	if Globals.local_username == "":
+		Globals.local_username = "Player"
+
 	MapSelection.visible = true
 	
-
 	peer.create_server(8848)
 	multiplayer.multiplayer_peer = peer
 
@@ -251,6 +264,11 @@ func _on_host_pressed() -> void:
 #  JOIN
 func _on_join_pressed() -> void:
 	$sound_click.play()
+	
+	Globals.local_username = multiplayer_ui.get_node("Username/UsernameInput").text.strip_edges()
+	if Globals.local_username == "":
+		Globals.local_username = "Player"
+	
 	$UI/MapSelection.hide()  # hide map selection for client players
 
 	var input_field = multiplayer_ui.get_node("VBoxContainer/HostIPField")
@@ -279,6 +297,20 @@ func _on_join_pressed() -> void:
 
 	multiplayer_ui.hide()
 	host_ip_label.hide() 
+	
+	# 🕒 Delay to ensure connection and player spawn are complete
+	await get_tree().create_timer(1.0).timeout  # You can reduce to 0.5 if fast enough
+
+	# 📨 Send username to host
+	var my_id = multiplayer.get_unique_id()
+	print("📨 Sending username to host:", Globals.local_username, "for ID:", my_id)
+	send_username_to_host.rpc_id(1, my_id, Globals.local_username)
+	
+	# ✅ Also update own NameLabel manually (host updates everyone's, but client needs this too)
+	var my_player = get_node_or_null(str(my_id))
+	if my_player and my_player.has_node("NameLabel"):
+		my_player.get_node("NameLabel").text = Globals.local_username
+		print("✅ Set client name label:", Globals.local_username)
 
 func register_kill(killer_id: int):
 	if !player_stats.has(killer_id): return
@@ -288,6 +320,23 @@ func register_kill(killer_id: int):
 func register_death(pid: int):
 	if !player_stats.has(pid): return
 	player_stats[pid]["deaths"] += 1
+	
+
+func register_username(pid: int, username: String):
+	player_usernames[pid] = username
+	print("✅ Registered username:", username, "for", pid)
+
+	var player_node = get_node_or_null(str(pid))
+	if player_node:
+		player_node.update_name_label.rpc(username)
+	else:
+		await get_tree().create_timer(0.3).timeout
+		var retry = get_node_or_null(str(pid))
+		if retry:
+			retry.update_name_label.rpc(username)
+		else:
+			print("⚠️ Couldn't find player node even after retry for pid:", pid)
+
 
 @rpc("any_peer")
 func request_damage(target_id: int, damage: int, shooter_id: int):
@@ -297,6 +346,11 @@ func request_damage(target_id: int, damage: int, shooter_id: int):
 		target_player.take_damage(damage, shooter_id)
 	else:
 		print("❌ Failed to find target:", target_id)
+
+@rpc("any_peer")
+func send_username_to_host(pid: int, username: String):
+	print("📨 Client sent username to host:", username)
+	register_username(pid, username)
 
 # SPAWN PLAYER
 func add_player(pid):
@@ -309,7 +363,19 @@ func add_player(pid):
 	player_stats[pid] = {"kills": 0, "deaths": 0}
 	
 	add_child(player)
+	
+	if pid == multiplayer.get_unique_id():
+		if multiplayer.is_server():
+			register_username(pid, Globals.local_username)  # Host adds self directly
+
+			
+
+	
+	print("🧍 Player node spawned:", player.name)
+	print("🗣️ Username dictionary now:", player_usernames)
+	
 	return player
+
 
 
 #  Get Safe Unique ID

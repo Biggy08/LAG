@@ -441,7 +441,7 @@ Button/styles/pressed = SubResource("StyleBoxFlat_6ipyb")
 
 [node name="game" type="Node"]
 script = ExtResource("1_xk3sj")
-match_duration = 30
+match_duration = 10
 
 [node name="Message" type="Label" parent="."]
 anchors_preset = 5
@@ -670,7 +670,6 @@ offset_right = 171.0
 offset_bottom = 63.0
 
 [node name="Multiplayer" type="Control" parent="UI"]
-visible = false
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 3
 anchors_preset = 15
@@ -693,12 +692,34 @@ offset_bottom = 567.0
 scale = Vector2(1.44728, 1.44044)
 color = Color(0.0768358, 0.0768358, 0.0768358, 1)
 
+[node name="Username" type="VBoxContainer" parent="UI/Multiplayer"]
+layout_mode = 2
+offset_left = 275.136
+offset_top = 243.82
+offset_right = 1110.14
+offset_bottom = 792.82
+scale = Vector2(0.499837, 1.48977)
+theme = SubResource("Theme_jqqd6")
+theme_override_constants/separation = 17
+
+[node name="label" type="Label" parent="UI/Multiplayer/Username"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "Username:"
+
+[node name="UsernameInput" type="LineEdit" parent="UI/Multiplayer/Username"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 30
+
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 624.745
-offset_top = 236.542
-offset_right = 1459.75
-offset_bottom = 785.542
+offset_left = 902.984
+offset_top = 197.725
+offset_right = 1737.98
+offset_bottom = 746.725
 scale = Vector2(0.499837, 1.48977)
 theme = SubResource("Theme_jqqd6")
 theme_override_constants/separation = 17
@@ -735,7 +756,8 @@ offset_bottom = 40.0
 [node name="Back" type="Control" parent="UI"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_left = -27.0
+offset_right = 13.0
 offset_bottom = 40.0
 
 [node name="Back" type="Button" parent="UI/Back"]

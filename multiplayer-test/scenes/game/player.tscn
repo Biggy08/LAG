@@ -228,6 +228,9 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath("Sprite2D:flip_v")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath("NameLabel:text")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [node name="player" type="CharacterBody2D" groups=["Player"]]
 collision_layer = 2
