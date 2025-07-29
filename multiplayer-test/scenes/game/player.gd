@@ -10,6 +10,7 @@ var kills: int = 0
 var deaths: int = 0
 const RESPAWN_TIME = 3
 const SHOOT_COOLDOWN = 0.2
+var is_local_player := false
 
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
@@ -36,7 +37,7 @@ func _enter_tree():
 
 func _ready():
 	cam = $Camera2D
-	
+	print(name, "| multiplayer authority?", is_multiplayer_authority(), "| My ID:", multiplayer.get_unique_id())
 	if is_multiplayer_authority():
 		$"CanvasLayer/Control/Aim Joystick".visible = true
 		call_deferred("_connect_joystick")
@@ -51,6 +52,8 @@ func _ready():
 		sprite_2d.modulate = Color.RED
 		health_bar.visible = false
 		cam.enabled = false
+		
+
 
 func _connect_joystick():
 	var aim_joystick = $"CanvasLayer/Control/Aim Joystick"
@@ -70,7 +73,7 @@ func shoot_in_direction(direction: Vector2) -> void:
 		#print(" Can't shoot — on cooldown →", name)
 		return
 
-	print("SHOOTING from", name, "| Direction:", direction)
+	#print("SHOOTING from", name, "| Direction:", direction)
 	can_shoot = false
 
 	if is_multiplayer_authority():
@@ -141,22 +144,22 @@ func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
 func take_damage(amount: int, shooter_pid: int = -1):
 	print("💥", name, "took damage:", amount)
 	health -= amount
-	health_bar.value = health
 
 	if health <= 0:
-		deaths += 1
-		print("☠️", name, "died")
+		sync_hide.rpc()
+		sfx_death.play()
+		if multiplayer.is_server():
+			game.register_death(int(name))
 		
 		# Award kill to the shooter
 		if shooter_pid != -1:
 			var shooter = game.get_node_or_null(str(shooter_pid))
 			if shooter and shooter.has_method("add_kill"):
 				shooter.add_kill()
-		
-		sync_hide.rpc()
-		sfx_death.play()
+				
+
 		set_physics_process(false)
-		$CollisionShape2D.disabled = true
+		call_deferred("_disable_collision")
 
 		await get_tree().create_timer(RESPAWN_TIME).timeout
 
@@ -172,15 +175,18 @@ func take_damage(amount: int, shooter_pid: int = -1):
 
 		sync_respawn.rpc(global_position)
 
-@rpc("call_local")
+func _disable_collision():
+	$CollisionShape2D.disabled = true
+
+@rpc("any_peer", "call_local")
 func sync_hide():
 	hide()
 	set_physics_process(false)
-	$CollisionShape2D.disabled = true
+	call_deferred("_disable_collision")
 
 
 
-@rpc("call_local")
+@rpc("any_peer", "call_local")
 func sync_respawn(pos: Vector2):
 	print(name,"  respawned at ", Globals.current_map)
 	global_position = pos
@@ -206,5 +212,9 @@ func teleport_to_position(pos: Vector2):
 	reset_on_teleport()
 
 func add_kill():
-	kills += 1
-	print("💀 Kill added for", name, "→ Total kills:", kills)
+	if multiplayer.is_server():
+		game.register_kill(int(name))
+
+func _process(delta):
+	if name == str(multiplayer.get_unique_id()):
+		health_bar.value = health

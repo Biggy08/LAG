@@ -8,18 +8,19 @@ var match_timer := Timer.new()
 @onready var multiplayer_ui = $UI/Multiplayer
 @onready var host_ip_label = $UI/HostIPLabel
 @onready var game_timer_label = $UI/GameTimer
-@onready var scoreboard_label = $UI/Scoreboard
+@onready var ScoreboardBox = $UI/ScoreboardBox
 
 const PLAYER = preload("res://scenes/game/player.tscn")
 
 var peer = ENetMultiplayerPeer.new()
 var players: Array[Player] = []
+var player_stats := {} # Dictionary: peer_id -> {kills, deaths}
 
 func _ready():
 	add_to_group("Game")
 	$MultiplayerSpawner.spawn_function = add_player
 	host_ip_label.hide()   #hides ip label for clients 
-	
+	ScoreboardBox.visible = false 
 	
 	
 # Get Valid LAN IP (Android + PC)
@@ -44,13 +45,30 @@ func update_match_timer():
 	if match_time_left <= 0:
 		match_timer.stop()
 		game_timer_label.hide()
-		show_scoreboard()
+		show_scoreboard(player_stats) # ← Local call for host
+		show_scoreboard.rpc(player_stats) # ← RPC for clients	
+		
+		
 		
 @rpc("authority", "call_local")
 func update_timer_label(text: String):
 	game_timer_label.text = text
 	game_timer_label.show()
-	
+
+@rpc("reliable")
+func show_scoreboard(stats: Dictionary):
+	var container = $UI/ScoreboardBox/PlayerStatsContainer
+	for child in container.get_children():
+		child.queue_free()
+
+	for pid in stats.keys():
+		var data = stats[pid]
+		var entry = Label.new()
+		entry.text = "Player %s - Kills: %d | Deaths: %d" % [pid, data["kills"], data["deaths"]]
+		container.add_child(entry)
+
+	$UI/ScoreboardBox.show()
+
 func start_match():
 	match_time_left = match_duration
 	game_timer_label.text = "⏱️ " + str(match_time_left)
@@ -66,29 +84,6 @@ func start_match():
 	add_child(match_timer)
 	match_timer.start()
 	
-func show_scoreboard():
-	var winner = ""
-	var max_kills = -1
-	var text = "[center][b]🏁 Match Over![/b][/center]\n\n"
-
-	for p in get_tree().get_nodes_in_group("Player"):
-		# Debug log
-		print("✅ Player", p.name, "→ Kills:", p.kills, "Deaths:", p.deaths)
-
-		text += "🎮 Player %s: %d Kills | %d Deaths\n" % [p.name, p.kills, p.deaths]
-
-		if p.kills > max_kills:
-			max_kills = p.kills
-			winner = p.name
-
-	text += "\n[center][color=gold]🏆 Winner: %s[/color][/center]" % winner
-	show_scoreboard_rpc.rpc(text)
-	
-@rpc("authority", "call_local")
-func show_scoreboard_rpc(text: String):
-	scoreboard_label.text = text
-	scoreboard_label.show()
-
 
 # HOST
 func _on_host_pressed() -> void:
@@ -153,16 +148,35 @@ func _on_join_pressed() -> void:
 	multiplayer_ui.hide()
 	host_ip_label.hide() 
 
+func register_kill(killer_id: int):
+	if !player_stats.has(killer_id): return
+	player_stats[killer_id]["kills"] += 1
+	print("✅ REGISTERED KILL - ID:", killer_id, " → ", player_stats[killer_id])
+	
+func register_death(pid: int):
+	if !player_stats.has(pid): return
+	player_stats[pid]["deaths"] += 1
+
+@rpc("any_peer")
+func request_damage(target_id: int, damage: int, shooter_id: int):
+	var target_player = get_node_or_null(str(target_id))
+	if target_player and target_player.has_method("take_damage"):
+		print("📦 Server applying", damage, "damage to", target_id, "from", shooter_id)
+		target_player.take_damage(damage, shooter_id)
+	else:
+		print("❌ Failed to find target:", target_id)
+
 # SPAWN PLAYER
 func add_player(pid):
 	$sfx_join.play()
 	var player = PLAYER.instantiate()
 	player.name = str(pid)
+	player.set_multiplayer_authority(pid)
 	player.global_position = $TextureRect1/Lobby.get_child(players.size()).global_position
 	players.append(player)
+	player_stats[pid] = {"kills": 0, "deaths": 0}
 	
-	#player.call_deferred("set_camera_limits", -50, 1200, -4, 300)
-	
+	add_child(player)
 	return player
 
 

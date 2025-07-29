@@ -21,8 +21,10 @@ func _on_body_entered(body: Node2D):
 		var target_id = body.get_multiplayer_authority()
 
 		if shooter_id != target_id:
-			# Only tell other players to take damage
-			body.take_damage.rpc_id(target_id, dmg, shooter_id)
+			if multiplayer.is_server():
+				body.take_damage(dmg, shooter_id)
+			else:
+				get_node("/root/game").rpc_id(1, "request_damage", target_id, dmg, shooter_id)
 
 	remove_bullet.rpc()
 
