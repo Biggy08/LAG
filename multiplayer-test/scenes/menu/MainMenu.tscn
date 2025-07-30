@@ -1,11 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://b0mujlx4r3xqk"]
+[gd_scene load_steps=10 format=3 uid="uid://b0mujlx4r3xqk"]
 
 [ext_resource type="Script" uid="uid://bu2bixrob8hjq" path="res://scenes/menu/main_menu.gd" id="1_8xveg"]
-[ext_resource type="Texture2D" uid="uid://duge5vbcgfnsh" path="res://assets/UI/backgorund.png" id="2_iv2fv"]
-[ext_resource type="FontFile" uid="uid://dlwjteyqh5efm" path="res://assets/UI/font/BitcountPropSingle-VariableFont_CRSV,ELSH,ELXP,slnt,wght.ttf" id="3_iv2fv"]
+[ext_resource type="Texture2D" uid="uid://bn386yxpsj1dk" path="res://assets/menu/Menu1.png" id="2_2nud1"]
 [ext_resource type="StyleBox" uid="uid://0q5r1xvo0dwk" path="res://assets/UI/Button/new_style_box_flat.tres" id="3_uwj7d"]
 [ext_resource type="StyleBox" uid="uid://c2x2rwm7h25t8" path="res://assets/UI/Button/new_style_box_flat_pressed.tres" id="4_mgsx5"]
-[ext_resource type="Texture2D" uid="uid://ciujx68xtr2wn" path="res://assets/UI/logo.png" id="5_iv2fv"]
+[ext_resource type="Texture2D" uid="uid://c66ylyuwyfj8j" path="res://assets/menu/Play.png" id="5_y6vun"]
+[ext_resource type="Texture2D" uid="uid://bd7kr8iyv3tau" path="res://assets/menu/Options.png" id="6_e1dod"]
+[ext_resource type="Texture2D" uid="uid://cbi3iqequ4yvb" path="res://assets/menu/Exit.png" id="7_bvc5d"]
 
 [sub_resource type="Theme" id="Theme_2nud1"]
 Button/styles/hover = ExtResource("3_uwj7d")
@@ -19,9 +20,9 @@ Button/styles/normal = ExtResource("3_uwj7d")
 script = ExtResource("1_8xveg")
 
 [node name="Backgorund" type="Sprite2D" parent="."]
-position = Vector2(561, 325)
-scale = Vector2(1.17389, 0.888182)
-texture = ExtResource("2_iv2fv")
+position = Vector2(583.264, 326.727)
+scale = Vector2(0.95079, 0.987693)
+texture = ExtResource("2_2nud1")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 8
@@ -29,56 +30,31 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 445.0
-offset_top = 279.0
-offset_right = 645.0
-offset_bottom = 512.0
+offset_left = 455.0
+offset_top = 223.5
+offset_right = 837.0
+offset_bottom = 717.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.15403, 1.20771)
+scale = Vector2(0.669, 0.7)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme = SubResource("Theme_2nud1")
 theme_override_constants/separation = 10
 
-[node name="Play" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="Play" type="TextureButton" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_iv2fv")
-theme_override_font_sizes/font_size = 40
-text = "Play"
+texture_normal = ExtResource("5_y6vun")
 
-[node name="Options" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="Options" type="TextureButton" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Options
-"
+texture_normal = ExtResource("6_e1dod")
 
-[node name="Exit" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="Exit" type="TextureButton" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Exit
-"
-
-[node name="Label" type="Label" parent="."]
-offset_left = 329.0
-offset_top = 164.0
-offset_right = 2810.0
-offset_bottom = 478.0
-scale = Vector2(0.2, 0.2)
-theme_override_colors/font_color = Color(0.0509804, 0.894118, 0.968627, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.0313726, 0.156863, 0.219608, 1)
-theme_override_constants/outline_size = 50
-theme_override_constants/shadow_outline_size = 15
-theme_override_fonts/font = ExtResource("3_iv2fv")
-theme_override_font_sizes/font_size = 230
-text = "Local Arcade GunFight"
-
-[node name="Logo" type="Sprite2D" parent="."]
-position = Vector2(561, 84)
-scale = Vector2(0.184027, 0.184027)
-texture = ExtResource("5_iv2fv")
+texture_normal = ExtResource("7_bvc5d")
 
 [node name="desc" type="Label" parent="."]
 offset_left = 227.0
