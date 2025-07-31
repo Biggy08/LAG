@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=28 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
@@ -10,7 +10,6 @@
 [ext_resource type="StyleBox" uid="uid://c2x2rwm7h25t8" path="res://assets/UI/Button/new_style_box_flat_pressed.tres" id="6_mypp5"]
 [ext_resource type="AudioStream" uid="uid://2ef0g0domd11" path="res://assets/sounds/menu_sounds/join.mp3" id="6_ubwsr"]
 [ext_resource type="StyleBox" uid="uid://0q5r1xvo0dwk" path="res://assets/UI/Button/new_style_box_flat.tres" id="7_6ipyb"]
-[ext_resource type="Texture2D" uid="uid://c5gls6ychbrkm" path="res://assets/UI/Button/map2.png" id="7_jqqd6"]
 [ext_resource type="Texture2D" uid="uid://buuydpe7kh1v6" path="res://assets/menu/Host.png" id="10_jqqd6"]
 [ext_resource type="Texture2D" uid="uid://c8t6uniybsysr" path="res://assets/menu/Join.png" id="11_2ocsm"]
 [ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="12_vno2n"]
@@ -409,6 +408,14 @@ outline_size = 2
 font_size = 60
 outline_size = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vno2n"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+
 [sub_resource type="SystemFont" id="SystemFont_mypp5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fxnns"]
@@ -422,17 +429,13 @@ Button/styles/normal = ExtResource("7_6ipyb")
 Button/styles/pressed = ExtResource("6_mypp5")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_fxnns")
 
-[sub_resource type="SystemFont" id="SystemFont_vno2n"]
-
-[sub_resource type="FontVariation" id="FontVariation_62xcg"]
-base_font = SubResource("SystemFont_vno2n")
-spacing_glyph = 15
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vno2n"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 50.0
-content_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ocsm"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mypp5"]
 bg_color = Color(0.0470588, 0.2, 0.27451, 0.462745)
@@ -513,8 +516,8 @@ anchors_preset = -1
 anchor_left = -4.991
 anchor_right = -0.636
 anchor_bottom = 3.651
-offset_left = -0.199951
-offset_right = -0.199982
+offset_left = -355.2
+offset_right = -355.2
 offset_bottom = 0.0498047
 grow_horizontal = 2
 grow_vertical = 2
@@ -551,9 +554,9 @@ anchors_preset = -1
 anchor_left = -4.991
 anchor_right = -0.636
 anchor_bottom = 3.651
-offset_left = -0.199951
+offset_left = -362.2
 offset_top = 1926.0
-offset_right = -0.200012
+offset_right = -362.2
 offset_bottom = 1926.05
 grow_horizontal = 2
 grow_vertical = 2
@@ -657,13 +660,16 @@ offset_bottom = 40.0
 grow_horizontal = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/MapSelection"]
-layout_mode = 2
-offset_left = -72.0
-offset_top = 7.0
-offset_right = 28.0
-offset_bottom = 291.0
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -65.0
+offset_top = -3.0
+offset_right = 32.0
+offset_bottom = 185.0
+grow_vertical = 0
 scale = Vector2(1, 1.04)
-theme_override_constants/separation = 100
 
 [node name="Map1" type="Button" parent="UI/MapSelection/VBoxContainer"]
 layout_mode = 2
@@ -672,6 +678,7 @@ theme_override_font_sizes/font_size = 30
 theme_override_icons/icon = ExtResource("6_fxnns")
 text = "Map 1
 "
+icon = ExtResource("5_vno2n")
 icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
@@ -681,7 +688,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Map2
 "
-icon = ExtResource("7_jqqd6")
+icon = ExtResource("4_vno2n")
 icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
@@ -709,9 +716,9 @@ scale = Vector2(0.966794, 0.824379)
 
 [node name="ColorRect" type="ColorRect" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 209.972
+offset_left = 211.006
 offset_top = -7.27821
-offset_right = 1044.97
+offset_right = 1046.0
 offset_bottom = 541.722
 scale = Vector2(1.44728, 1.44044)
 color = Color(0, 0, 0, 1)
@@ -728,23 +735,16 @@ text = "Username:"
 label_settings = SubResource("LabelSettings_2ocsm")
 uppercase = true
 
-[node name="Username" type="VBoxContainer" parent="UI/Multiplayer"]
+[node name="Username Input" type="LineEdit" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 238.0
-offset_top = 291.0
-offset_right = 1126.0
-offset_bottom = 368.0
-grow_vertical = 2
-scale = Vector2(0.499837, 1.48977)
-theme = SubResource("Theme_jqqd6")
-theme_override_constants/separation = 23
-
-[node name="UsernameInput" type="LineEdit" parent="UI/Multiplayer/Username"]
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_fonts/font = SubResource("FontVariation_62xcg")
-theme_override_font_sizes/font_size = 36
+offset_left = 243.0
+offset_top = 268.0
+offset_right = 566.0
+offset_bottom = 355.0
+theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_vno2n")
+alignment = 1
+max_length = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Multiplayer"]
 layout_mode = 1
@@ -772,12 +772,6 @@ size_flags_vertical = 2
 texture_normal = ExtResource("10_jqqd6")
 stretch_mode = 0
 
-[node name="HostIPField" type="LineEdit" parent="UI/Multiplayer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 5
-size_flags_vertical = 2
-theme_override_font_sizes/font_size = 30
-
 [node name="Join" type="TextureButton" parent="UI/Multiplayer/VBoxContainer"]
 custom_minimum_size = Vector2(400, -500)
 layout_mode = 2
@@ -785,6 +779,26 @@ size_flags_horizontal = 5
 size_flags_vertical = 2
 texture_normal = ExtResource("11_2ocsm")
 stretch_mode = 0
+
+[node name="HostIPField" type="LineEdit" parent="UI/Multiplayer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.871
+anchor_top = 1.014
+anchor_right = 0.871
+anchor_bottom = 1.014
+offset_left = 61.2
+offset_top = -68.3
+offset_right = 331.2
+offset_bottom = 29.7
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 5
+size_flags_vertical = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_2ocsm")
+alignment = 1
+max_length = 20
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Multiplayer"]
 layout_mode = 0

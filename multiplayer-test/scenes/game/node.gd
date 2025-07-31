@@ -229,7 +229,7 @@ func _on_host_pressed() -> void:
 	print("🎮 GAME HOSTED")
 	
 	# Capture and store the username from the input field
-	Globals.local_username = multiplayer_ui.get_node("Username/UsernameInput").text.strip_edges()
+	Globals.local_username = multiplayer_ui.get_node("Username Input").text.strip_edges()
 	if Globals.local_username == "":
 		Globals.local_username = "Player"
 
@@ -265,13 +265,13 @@ func _on_host_pressed() -> void:
 func _on_join_pressed() -> void:
 	$sound_click.play()
 	
-	Globals.local_username = multiplayer_ui.get_node("Username/UsernameInput").text.strip_edges()
+	Globals.local_username = multiplayer_ui.get_node("UI/Multiplayer/Username Input").text.strip_edges()
 	if Globals.local_username == "":
 		Globals.local_username = "Player"
 	
 	$UI/MapSelection.hide()  # hide map selection for client players
 
-	var input_field = multiplayer_ui.get_node("VBoxContainer/HostIPField")
+	var input_field = multiplayer_ui.get_node("VBoxContainer/HostIPField")  #host IP
 	var ip_address = input_field.text.strip_edges()
 	if ip_address == "":
 		ip_address = "192.168.1.67"  # Fallback for test
@@ -370,13 +370,10 @@ func add_player(pid):
 
 			
 
-	
 	print("🧍 Player node spawned:", player.name)
 	print("🗣️ Username dictionary now:", player_usernames)
 	
 	return player
-
-
 
 #  Get Safe Unique ID
 func get_safe_unique_id():
@@ -500,9 +497,6 @@ func get_random_map2_spawnpoint():
 	]
 	var spawn: Marker2D = spawn_points2.pick_random()
 	return spawn.global_position
-
-
-
 
 
 func _on_map_1_visibility_changed() -> void:

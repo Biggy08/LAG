@@ -239,6 +239,9 @@ slide_on_ceiling = false
 script = ExtResource("1_uu06s")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.8, 0.8)
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
 
 [node name="NameLabel" type="Label" parent="."]
 offset_left = 207.0
@@ -322,19 +325,19 @@ offset_bottom = 40.0
 
 [node name="Virtual Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
 layout_mode = 1
-offset_left = 152.0
-offset_top = 385.0
-offset_right = 332.0
-offset_bottom = 565.0
+offset_left = 66.0
+offset_top = 387.0
+offset_right = 246.0
+offset_bottom = 567.0
 deadzone_size = 41.0
 action_up = "ui_accept"
 
 [node name="Aim Joystick" parent="CanvasLayer/Control" instance=ExtResource("11_dsw4c")]
 layout_mode = 1
-offset_left = 887.0
-offset_top = 390.0
-offset_right = 1067.0
-offset_bottom = 570.0
+offset_left = 905.0
+offset_top = 388.0
+offset_right = 1085.0
+offset_bottom = 568.0
 use_input_actions = false
 action_left = ""
 action_right = ""
