@@ -62,17 +62,17 @@ func _ready():
 		sprite_2d.modulate = Color.RED
 		cam.enabled = false
 		
-func set_display_name(name: String):
-	username = name
+func set_display_name(pname: String):
+	username = pname
 	NameLabel.text = username
 
 @rpc("authority", "call_local")
-func sync_username(name: String):
-	set_display_name(name)
+func sync_username(pname: String):
+	set_display_name(pname)
 
 @rpc("call_local")
-func update_name_label(username: String):
-	NameLabel.text = username
+func update_name_label(pusername: String):
+	NameLabel.text = pusername
 
 func _connect_joystick():
 	var aim_joystick = $"CanvasLayer/Control/Aim Joystick"

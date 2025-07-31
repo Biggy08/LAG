@@ -198,10 +198,10 @@ func show_scoreboard(stats: Dictionary):
 	else:
 		var names = []
 		for pid in winners:
-			var name = "Player %s" % str(pid)
+			var pname = "Player %s" % str(pid)
 			if username_dict.has(pid):
 				name = username_dict[pid]
-			names.append(name)
+			names.append(pname)
 		winner_label.text = "🏆 Tie! %s" % [", ".join(names)]
 
 	container.add_child(winner_label)
@@ -265,16 +265,16 @@ func _on_host_pressed() -> void:
 func _on_join_pressed() -> void:
 	$sound_click.play()
 	
-	Globals.local_username = multiplayer_ui.get_node("UI/Multiplayer/Username Input").text.strip_edges()
+	Globals.local_username = multiplayer_ui.get_node("Username Input").text.strip_edges()
 	if Globals.local_username == "":
 		Globals.local_username = "Player"
 	
 	$UI/MapSelection.hide()  # hide map selection for client players
 
-	var input_field = multiplayer_ui.get_node("VBoxContainer/HostIPField")  #host IP
+	var input_field = multiplayer_ui.get_node("HostIPField")  #host IP
 	var ip_address = input_field.text.strip_edges()
 	if ip_address == "":
-		ip_address = "192.168.1.67"  # Fallback for test
+		ip_address = "192.168.1.68"  # Fallback for test
 
 	print("🔌 Connecting to host at: ", ip_address)
 
