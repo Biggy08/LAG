@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=29 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://buuydpe7kh1v6" path="res://assets/menu/Host.png" id="10_jqqd6"]
 [ext_resource type="Texture2D" uid="uid://c8t6uniybsysr" path="res://assets/menu/Join.png" id="11_2ocsm"]
 [ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="12_vno2n"]
+[ext_resource type="PackedScene" uid="uid://ck0kr26ysi4ov" path="res://assets/map_objects/JumpPad.tscn" id="14_vno2n"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
 texture = ExtResource("3_kdpyv")
@@ -725,10 +726,10 @@ color = Color(0, 0, 0, 1)
 
 [node name="Username Label" type="Label" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 237.9
-offset_top = 184.381
-offset_right = 578.9
-offset_bottom = 267.381
+offset_left = 254.449
+offset_top = 260.802
+offset_right = 595.449
+offset_bottom = 343.802
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Username:"
@@ -737,10 +738,10 @@ uppercase = true
 
 [node name="Username Input" type="LineEdit" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 243.0
-offset_top = 268.0
-offset_right = 566.0
-offset_bottom = 355.0
+offset_left = 265.827
+offset_top = 377.254
+offset_right = 588.827
+offset_bottom = 464.254
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_vno2n")
 alignment = 1
@@ -753,10 +754,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -79.0
-offset_top = -109.0
-offset_right = 802.0
-offset_bottom = 291.0
+offset_left = -45.9615
+offset_top = -147.366
+offset_right = 850.039
+offset_bottom = 252.634
 grow_horizontal = 0
 grow_vertical = 2
 scale = Vector2(0.3, 0.894)
@@ -787,10 +788,10 @@ anchor_left = 0.871
 anchor_top = 1.014
 anchor_right = 0.871
 anchor_bottom = 1.014
-offset_left = 61.2
-offset_top = -68.3
-offset_right = 331.2
-offset_bottom = 29.7
+offset_left = 103.784
+offset_top = -102.094
+offset_right = 373.784
+offset_bottom = -4.09402
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_horizontal = 5
@@ -799,11 +800,6 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_2ocsm")
 alignment = 1
 max_length = 20
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/Multiplayer"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="Back" type="Control" parent="UI"]
 layout_mode = 3
@@ -837,6 +833,9 @@ stream = ExtResource("4_bhoiw")
 
 [node name="sfx_join" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ubwsr")
+
+[node name="JumpPad" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-2593, 1230)
 
 [connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
 [connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://gd7vmu7q4eil"]
+
+[ext_resource type="Script" path="res://scenes/maps/map_objects/jump_pad.gd" id="1_8ei12"]
+[ext_resource type="Texture2D" uid="uid://dgm5n6jsx2bj4" path="res://assets/map/jump_pad.png" id="1_acppr"]
+[ext_resource type="Script" path="res://scenes/maps/map_objects/area_2d.gd" id="2_p8ygg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ccins"]
+size = Vector2(212.306, 211.563)
+
+[node name="JumpPad" type="Node2D"]
+script = ExtResource("1_8ei12")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-0.85, -1.35)
+scale = Vector2(0.193117, 0.189069)
+texture = ExtResource("1_acppr")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+position = Vector2(0, -105)
+script = ExtResource("2_p8ygg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D"]
+position = Vector2(1.81237, 101.562)
+shape = SubResource("RectangleShape2D_ccins")
+
+[connection signal="area_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="Sprite2D/Area2D" to="Sprite2D/Area2D" method="_on_area_entered"]

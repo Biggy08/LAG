@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://c2mpc80wasuou"]
+
+[ext_resource type="Texture2D" uid="uid://cg6kauxp50dfu" path="res://assets/map_objects/JumpPad1.png" id="1_acppr"]
+[ext_resource type="AudioStream" uid="uid://62gmapbbd51n" path="res://assets/map_objects/JumpPadSound.mp3" id="4_tvqkr"]
+
+[sub_resource type="GDScript" id="GDScript_bmtah"]
+script/source = "extends Node2D
+
+@export var force = -800
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	if area.get_parent()  is Player:
+		area.get_parent().velocity.y = force
+	$AudioStreamPlayer2D.play()
+"
+
+[sub_resource type="GDScript" id="GDScript_3gacq"]
+script/source = "extends Area2D
+
+
+# Jump Pad Scene
+
+	
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ccins"]
+size = Vector2(144.99, 137.516)
+
+[node name="JumpPad" type="Node2D"]
+script = SubResource("GDScript_bmtah")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0.999999, -3)
+scale = Vector2(1.65217, 1.45455)
+texture = ExtResource("1_acppr")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+position = Vector2(0, -105)
+script = SubResource("GDScript_3gacq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D"]
+position = Vector2(-0.0388756, 105.116)
+scale = Vector2(0.157357, 0.159826)
+shape = SubResource("RectangleShape2D_ccins")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_tvqkr")
+
+[connection signal="area_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="Sprite2D/Area2D" to="Sprite2D/Area2D" method="_on_area_entered"]
