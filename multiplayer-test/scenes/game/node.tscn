@@ -694,10 +694,10 @@ scale = Vector2(0.966794, 0.824379)
 
 [node name="ColorRect" type="ColorRect" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 1238.11
-offset_top = -50.9475
-offset_right = 2136.11
-offset_bottom = 629.053
+offset_left = 135.499
+offset_top = -40.0301
+offset_right = 1033.5
+offset_bottom = 639.97
 scale = Vector2(1.44728, 1.44044)
 color = Color(0, 0, 0, 1)
 

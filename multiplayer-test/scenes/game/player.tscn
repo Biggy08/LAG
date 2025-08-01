@@ -1,14 +1,15 @@
-[gd_scene load_steps=41 format=3 uid="uid://c5won7nctd8y6"]
+[gd_scene load_steps=42 format=3 uid="uid://c5won7nctd8y6"]
 
 [ext_resource type="Texture2D" uid="uid://dgfe2a4ohwoxw" path="res://assets/players/Jump (32x32).png" id="1_gv3r6"]
 [ext_resource type="Script" uid="uid://cor1pol367n80" path="res://scenes/game/player.gd" id="1_uu06s"]
+[ext_resource type="Texture2D" uid="uid://3o5sn1gvojwd" path="res://assets/players/hat.png" id="2_8egkn"]
 [ext_resource type="Texture2D" uid="uid://c5152p7i1s7m" path="res://assets/players/Idle (32x32).png" id="2_duttb"]
 [ext_resource type="Texture2D" uid="uid://xwyx73pv1t1v" path="res://assets/players/Fall (32x32).png" id="2_ek8yq"]
 [ext_resource type="Texture2D" uid="uid://b53cqmi85e0h2" path="res://assets/players/Run (32x32).png" id="5_8psxn"]
+[ext_resource type="Texture2D" uid="uid://c0y6d5tdn2u1i" path="res://assets/weapons/ak.png" id="6_0eoyi"]
 [ext_resource type="AudioStream" uid="uid://qnja1oofjfn3" path="res://assets/sounds/Pisto Shooting.mp3" id="6_121pn"]
 [ext_resource type="AudioStream" uid="uid://f2l1mlkq03a6" path="res://assets/sounds/run.mp3" id="7_0eoyi"]
 [ext_resource type="AudioStream" uid="uid://dljll8qcmfekj" path="res://assets/sounds/sfx_jump.mp3" id="7_rxiur"]
-[ext_resource type="Texture2D" uid="uid://c3uijctewcu0e" path="res://assets/weapons/ak47.png" id="8_m5ugi"]
 [ext_resource type="AudioStream" uid="uid://dai7mknuqc041" path="res://assets/sounds/DeathBell.mp3" id="9_bnwh7"]
 [ext_resource type="AudioStream" uid="uid://chw6fi6e6fryx" path="res://assets/sounds/Respawn.mp3" id="10_dsw4c"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="11_dsw4c"]
@@ -232,12 +233,21 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("NameLabel:text")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+properties/6/path = NodePath("GunContainer:position")
+properties/6/spawn = true
+properties/6/replication_mode = 1
 
 [node name="player" type="CharacterBody2D" groups=["Player"]]
 scale = Vector2(1.2, 1.2)
 collision_layer = 3
 slide_on_ceiling = false
 script = ExtResource("1_uu06s")
+
+[node name="Hat" type="Sprite2D" parent="."]
+top_level = true
+position = Vector2(275.5, 216)
+scale = Vector2(0.166333, 0.152305)
+texture = ExtResource("2_8egkn")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.8, 0.8)
@@ -288,9 +298,9 @@ replication_config = SubResource("SceneReplicationConfig_ppb0c")
 position = Vector2(243, 196)
 
 [node name="GunSprite" type="Sprite2D" parent="GunContainer"]
-position = Vector2(-5.5, 20.6667)
-scale = Vector2(0.0765625, 0.0644531)
-texture = ExtResource("8_m5ugi")
+position = Vector2(-10.4938, 23.7217)
+scale = Vector2(0.109974, 0.0811133)
+texture = ExtResource("6_0eoyi")
 
 [node name="Muzzle" type="Marker2D" parent="GunContainer/GunSprite"]
 position = Vector2(261.225, -62.0607)
