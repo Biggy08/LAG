@@ -194,3 +194,17 @@ func _reset():
 		for action in [action_left, action_right, action_down, action_up]:
 			if Input.is_action_pressed(action):
 				Input.action_release(action)
+
+
+var shoot_cooldown := 0.1 # seconds between shots
+var _time_since_last_shot := 0.0
+
+# Delay on shooting and continuous shooting
+func _process(delta):
+	if is_pressed and output.length() > 0.1:
+		_time_since_last_shot += delta
+		if _time_since_last_shot >= shoot_cooldown:
+			emit_signal("shoot", output.normalized())
+			_time_since_last_shot = 0.0
+	else:
+		_time_since_last_shot = shoot_cooldown
