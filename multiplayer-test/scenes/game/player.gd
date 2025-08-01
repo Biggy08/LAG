@@ -138,17 +138,40 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	sprite_2d.flip_h = last_direction < 0  # face left if last direction was left
+	#sprite_2d.flip_h = last_direction < 0  # face left if last direction was left
 
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		$"Audio Node 2D/sfx_jump".play()
+
+func _process(delta):
+	if not is_local_player:
+		return
+
+	var aim_joystick = $"CanvasLayer/Control/Aim Joystick"
+	if aim_joystick and aim_joystick.is_pressed:
+		var aim_x = aim_joystick.output.x
+
+		if aim_x < -0.1:
+			facing_left = true
+		elif aim_x > 0.1:
+			facing_left = false
+
+	sprite_2d.flip_h = facing_left
+
+
+		# No else: keep current facing if aim_x between -0.1 and 0.1
+
+
 
 func set_camera_limits(left: int, right: int, top: int, bottom: int):
 	cam.limit_left = left
 	cam.limit_right = right
 	cam.limit_top = top
 	cam.limit_bottom = bottom
+	
+
+
 
 
 @rpc("call_local")
