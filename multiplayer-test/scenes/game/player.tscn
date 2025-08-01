@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://c5won7nctd8y6"]
+[gd_scene load_steps=41 format=3 uid="uid://c5won7nctd8y6"]
 
 [ext_resource type="Texture2D" uid="uid://dgfe2a4ohwoxw" path="res://assets/players/Jump (32x32).png" id="1_gv3r6"]
 [ext_resource type="Script" uid="uid://cor1pol367n80" path="res://scenes/game/player.gd" id="1_uu06s"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://xwyx73pv1t1v" path="res://assets/players/Fall (32x32).png" id="2_ek8yq"]
 [ext_resource type="Texture2D" uid="uid://b53cqmi85e0h2" path="res://assets/players/Run (32x32).png" id="5_8psxn"]
 [ext_resource type="AudioStream" uid="uid://qnja1oofjfn3" path="res://assets/sounds/Pisto Shooting.mp3" id="6_121pn"]
+[ext_resource type="AudioStream" uid="uid://f2l1mlkq03a6" path="res://assets/sounds/run.mp3" id="7_0eoyi"]
 [ext_resource type="AudioStream" uid="uid://dljll8qcmfekj" path="res://assets/sounds/sfx_jump.mp3" id="7_rxiur"]
 [ext_resource type="Texture2D" uid="uid://c3uijctewcu0e" path="res://assets/weapons/ak47.png" id="8_m5ugi"]
 [ext_resource type="AudioStream" uid="uid://dai7mknuqc041" path="res://assets/sounds/DeathBell.mp3" id="9_bnwh7"]
@@ -297,7 +298,7 @@ position = Vector2(261.225, -62.0607)
 [node name="Audio Node 2D" type="Node2D" parent="."]
 
 [node name="sfx_run" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
-stream = ExtResource("6_121pn")
+stream = ExtResource("7_0eoyi")
 volume_db = 0.12
 pitch_scale = 5.91
 autoplay = true
