@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://buuydpe7kh1v6" path="res://assets/menu/Host.png" id="10_jqqd6"]
 [ext_resource type="Texture2D" uid="uid://c8t6uniybsysr" path="res://assets/menu/Join.png" id="11_2ocsm"]
 [ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="12_vno2n"]
-[ext_resource type="PackedScene" uid="uid://ck0kr26ysi4ov" path="res://assets/map_objects/JumpPad.tscn" id="14_vno2n"]
+[ext_resource type="PackedScene" uid="uid://c5domnm2an5dn" path="res://scenes/game/jump_pad.tscn" id="14_vno2n"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
 texture = ExtResource("3_kdpyv")
@@ -694,10 +694,10 @@ scale = Vector2(0.966794, 0.824379)
 
 [node name="ColorRect" type="ColorRect" parent="UI/Multiplayer"]
 layout_mode = 2
-offset_left = 177.908
-offset_top = -12.1304
-offset_right = 1075.91
-offset_bottom = 667.87
+offset_left = 1238.11
+offset_top = -50.9475
+offset_right = 2136.11
+offset_bottom = 629.053
 scale = Vector2(1.44728, 1.44044)
 color = Color(0, 0, 0, 1)
 
@@ -812,7 +812,7 @@ stream = ExtResource("4_bhoiw")
 stream = ExtResource("6_ubwsr")
 
 [node name="JumpPad" parent="." instance=ExtResource("14_vno2n")]
-position = Vector2(-3273, 1453)
+position = Vector2(514, 494)
 
 [connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
 [connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]

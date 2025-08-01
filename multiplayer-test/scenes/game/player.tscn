@@ -235,7 +235,7 @@ properties/5/replication_mode = 1
 
 [node name="player" type="CharacterBody2D" groups=["Player"]]
 scale = Vector2(1.2, 1.2)
-collision_layer = 2
+collision_layer = 3
 slide_on_ceiling = false
 script = ExtResource("1_uu06s")
 
@@ -288,7 +288,7 @@ replication_config = SubResource("SceneReplicationConfig_ppb0c")
 position = Vector2(243, 196)
 
 [node name="GunSprite" type="Sprite2D" parent="GunContainer"]
-position = Vector2(38, -1)
+position = Vector2(-5.5, 20.6667)
 scale = Vector2(0.0765625, 0.0644531)
 texture = ExtResource("8_m5ugi")
 

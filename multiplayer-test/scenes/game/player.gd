@@ -12,6 +12,8 @@ const RESPAWN_TIME = 3
 const SHOOT_COOLDOWN = 0.2
 var is_local_player := false
 
+const jump_pad_height: float = -500.0
+
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
 @onready var sprite_2d = $Sprite2D
@@ -112,12 +114,7 @@ func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return	
 
-	$GunContainer.look_at(get_global_mouse_position())
-
-	if get_global_mouse_position().x < global_position.x:
-		$GunContainer/GunSprite.flip_v = true
-	else:
-		$GunContainer/GunSprite.flip_v = false
+	#$GunContainer.look_at(get_global_mouse_position())
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -144,6 +141,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 		$"Audio Node 2D/sfx_jump".play()
 
+
 func _process(delta):
 	if not is_local_player:
 		return
@@ -158,6 +156,11 @@ func _process(delta):
 			facing_left = false
 
 	sprite_2d.flip_h = facing_left
+	$GunContainer/GunSprite.flip_h = facing_left
+	var Muzzle = $GunContainer/GunSprite/Muzzle
+	Muzzle.position.x = -abs(Muzzle.position.x) if facing_left else abs(Muzzle.position.x)
+
+
 
 
 		# No else: keep current facing if aim_x between -0.1 and 0.1

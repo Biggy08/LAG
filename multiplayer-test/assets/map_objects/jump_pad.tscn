@@ -1,49 +1,55 @@
 [gd_scene load_steps=6 format=3 uid="uid://c2mpc80wasuou"]
 
-[ext_resource type="Texture2D" uid="uid://cg6kauxp50dfu" path="res://assets/map_objects/JumpPad1.png" id="1_acppr"]
 [ext_resource type="AudioStream" uid="uid://62gmapbbd51n" path="res://assets/map_objects/JumpPadSound.mp3" id="4_tvqkr"]
 
 [sub_resource type="GDScript" id="GDScript_bmtah"]
 script/source = "extends Node2D
 
 @export var force = -800
+
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area.get_parent()  is Player:
 		area.get_parent().velocity.y = force
 	$AudioStreamPlayer2D.play()
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.get(\"jump_pad_height\"):
+		body.velocity.y = body.jump_pad_height
+		
 "
 
-[sub_resource type="GDScript" id="GDScript_3gacq"]
-script/source = "extends Area2D
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_j50m2"]
+load_path = "res://.godot/imported/JumpPad1.png-a9294898e1ac282c586198282d6379f3.ctex"
 
-
-# Jump Pad Scene
-
-	
-"
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bmtah"]
+size = Vector2(103.56, 105.388)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ccins"]
-size = Vector2(144.99, 137.516)
+size = Vector2(107.113, 152.705)
 
-[node name="JumpPad" type="Node2D"]
+[node name="JumpPad" type="StaticBody2D"]
 script = SubResource("GDScript_bmtah")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0.999999, -3)
+position = Vector2(1, -3)
 scale = Vector2(1.65217, 1.45455)
-texture = ExtResource("1_acppr")
+texture = SubResource("CompressedTexture2D_j50m2")
 
-[node name="Area2D" type="Area2D" parent="Sprite2D"]
-position = Vector2(0, -105)
-script = SubResource("GDScript_3gacq")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.46184, -4.25)
+scale = Vector2(0.259981, 0.232475)
+shape = SubResource("RectangleShape2D_bmtah")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D"]
-position = Vector2(-0.0388756, 105.116)
-scale = Vector2(0.157357, 0.159826)
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1, -9.25)
+scale = Vector2(0.259981, 0.232475)
 shape = SubResource("RectangleShape2D_ccins")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_tvqkr")
 
-[connection signal="area_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_area_entered"]
-[connection signal="area_entered" from="Sprite2D/Area2D" to="Sprite2D/Area2D" method="_on_area_entered"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

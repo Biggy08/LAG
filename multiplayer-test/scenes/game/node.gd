@@ -505,3 +505,5 @@ func _on_map_1_visibility_changed() -> void:
 
 func _on_map_2_visibility_changed() -> void:
 	pass # Replace with function body.
+
+#Jump Pad
