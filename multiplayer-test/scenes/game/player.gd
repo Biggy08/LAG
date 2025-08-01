@@ -11,6 +11,7 @@ var deaths: int = 0
 const RESPAWN_TIME = 3
 const SHOOT_COOLDOWN = 0.2
 var is_local_player := false
+var base_gun_pos = Vector2.ZERO
 
 const jump_pad_height: float = -500.0
 
@@ -40,7 +41,8 @@ func _enter_tree():
 func _ready():
 	cam = $Camera2D
 	var my_id = str(multiplayer.get_unique_id())
-
+	base_gun_pos = $GunContainer.position
+	
 	if name == my_id:
 		is_local_player = true
 		health_bar.visible = true
@@ -159,6 +161,14 @@ func _process(delta):
 	$GunContainer/GunSprite.flip_h = facing_left
 	var Muzzle = $GunContainer/GunSprite/Muzzle
 	Muzzle.position.x = -abs(Muzzle.position.x) if facing_left else abs(Muzzle.position.x)
+	# Oscillate gun container vertically with sine wave bobbing
+	var bob_speed = 85.0
+	var time = Time.get_ticks_msec() / bob_speed
+	var bob = sin(time) * 2  # 2 pixels up/down
+	$GunContainer.position = base_gun_pos + Vector2(0, bob)
+
+	
+
 
 
 
