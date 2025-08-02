@@ -15,6 +15,13 @@ var base_gun_pos = Vector2.ZERO
 
 const jump_pad_height: float = -500.0
 
+# Ammo system
+const MAX_AMMO = 10
+const RELOAD_TIME = 2.0 
+
+var current_ammo := MAX_AMMO
+var is_reloading := false
+
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
 @onready var sprite_2d = $Sprite2D
@@ -58,6 +65,9 @@ func _ready():
 		call_deferred("_connect_joystick")
 		cam.enabled = true
 		cam.make_current()
+		
+		$CanvasLayer/Control/AmmoLabel.visible = true
+		update_ammo_label()
 	else:
 		var aim_joystick = $"CanvasLayer/Control/Aim Joystick"
 		aim_joystick.visible = false
@@ -65,7 +75,15 @@ func _ready():
 		aim_joystick.set_process(false)
 		sprite_2d.modulate = Color.RED
 		cam.enabled = false
-		
+
+func update_ammo_label():
+	if not is_local_player: return
+	var ammo_label = $"CanvasLayer/Control/AmmoLabel"
+	if is_reloading:
+		ammo_label.text = "Reloading..."
+	else:
+		ammo_label.text = "Ammo: %d / %d" % [current_ammo, MAX_AMMO]
+
 func set_display_name(pname: String):
 	username = pname
 	NameLabel.text = username
@@ -95,9 +113,15 @@ func shoot_in_direction(direction: Vector2) -> void:
 	if not can_shoot:
 		#print(" Can't shoot — on cooldown →", name)
 		return
+		
+	if current_ammo <= 0:
+		reload()
+		return
 
 	#print("SHOOTING from", name, "| Direction:", direction)
 	can_shoot = false
+	current_ammo -= 1
+	update_ammo_label()
 
 	if is_multiplayer_authority():
 		var pos = muzzle.global_position
@@ -109,6 +133,20 @@ func shoot_in_direction(direction: Vector2) -> void:
 
 	await get_tree().create_timer(SHOOT_COOLDOWN).timeout
 	can_shoot = true
+
+func reload():
+	if is_reloading or current_ammo == MAX_AMMO:
+		return
+
+	is_reloading = true
+	update_ammo_label()
+
+	print("🔄 Reloading...")
+	await get_tree().create_timer(RELOAD_TIME).timeout
+	current_ammo = MAX_AMMO
+	is_reloading = false
+	update_ammo_label()
+	print("✅ Reload complete")
 
 var last_direction = 1  # 1 = right, -1 = left
 

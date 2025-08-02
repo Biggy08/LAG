@@ -355,4 +355,11 @@ action_left = ""
 action_right = ""
 action_up = ""
 
+[node name="AmmoLabel" type="Label" parent="CanvasLayer/Control"]
+offset_left = 547.0
+offset_top = 542.0
+offset_right = 611.0
+offset_bottom = 565.0
+theme_override_font_sizes/font_size = 24
+
 [connection signal="shoot" from="CanvasLayer/Control/Aim Joystick" to="." method="_on_aim_joystick_shoot"]
