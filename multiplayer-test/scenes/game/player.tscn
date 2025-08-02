@@ -287,7 +287,7 @@ properties/6/spawn = true
 properties/6/replication_mode = 1
 
 [node name="player" type="CharacterBody2D" groups=["Player"]]
-scale = Vector2(1.2, 1.2)
+scale = Vector2(1.4, 1.4)
 collision_layer = 3
 slide_on_ceiling = false
 script = ExtResource("1_uu06s")

@@ -86,10 +86,16 @@ func hide_local_player_ui():
 			var joystick_path = "CanvasLayer/Control"
 			var joystick_container = player_node.get_node_or_null(joystick_path)
 			if joystick_container:
-				if joystick_container.has_node("Virtual Joystick"):
-					joystick_container.get_node("Virtual Joystick").visible = false
-				if joystick_container.has_node("Aim Joystick"):
-					joystick_container.get_node("Aim Joystick").visible = false
+					if joystick_container.has_node("Virtual Joystick"):
+						joystick_container.get_node("Virtual Joystick").visible = false
+					if joystick_container.has_node("Aim Joystick"):
+						joystick_container.get_node("Aim Joystick").visible = false
+					if joystick_container.has_node("jump_button"):
+						joystick_container.get_node("jump_button").visible = false
+					if joystick_container.has_node("reload"):
+						joystick_container.get_node("reload").visible = false
+					if joystick_container.has_node("AmmoLabel"):
+						joystick_container.get_node("AmmoLabel").visible = false
 		
 @rpc("authority", "call_local")
 func update_timer_label(text: String):
