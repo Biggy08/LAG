@@ -4,15 +4,16 @@ extends CharacterBody2D
 @onready var cam: Camera2D = $Camera2D
 
 # Movement
-const SPEED = 300.0
-const JUMP_VELOCITY = -500.0
+@export var SPEED = 300.0
+@export var JUMP_VELOCITY = -500.0
 
 #For  kills /deaths/respawns
 const MAX_HEALTH = 100
 var kills: int = 0
 var deaths: int = 0
 const RESPAWN_TIME = 3
-const SHOOT_COOLDOWN = 0.2
+@export var SHOOT_COOLDOWN: float = 0.1
+
 var is_local_player := false
 var base_gun_pos = Vector2.ZERO
 
@@ -25,8 +26,8 @@ var double_jump_played = false
 
 
 # Ammo system
-const MAX_AMMO = 10
-const RELOAD_TIME = 2.0 
+const MAX_AMMO = 40
+const RELOAD_TIME = 2.5 
 
 var current_ammo := MAX_AMMO
 var is_reloading := false
@@ -34,6 +35,7 @@ var is_reloading := false
 const BULLET = preload("res://scenes/game/bullet.tscn")
 
 @onready var sprite_2d = $Sprite2D
+@onready var sfx_run: AudioStreamPlayer2D = $"Audio Node 2D/sfx_run"
 @onready var sfx_death = $"Audio Node 2D/sfx_death"
 @onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
 @onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
@@ -125,7 +127,6 @@ func shoot_in_direction(direction: Vector2) -> void:
 	if not can_shoot:
 		#print(" Can't shoot — on cooldown →", name)
 		return
-		
 	if current_ammo <= 0:
 		reload()
 		return
@@ -200,6 +201,8 @@ func _physics_process(delta: float) -> void:
 			sprite_2d.animation = "jumping"
 		elif abs(velocity.x) > 1:
 			sprite_2d.animation = "running"
+			if not sfx_run.playing:
+				sfx_run.play()
 		else:
 			sprite_2d.animation = "idle"
 
@@ -244,7 +247,7 @@ func set_camera_limits(left: int, right: int, top: int, bottom: int):
 
 @rpc("call_local")
 func spawn_bullet(pos: Vector2, rot: float, shooter_pid: int):
-	$"Audio Node 2D/sfx_shoot1".play()
+	sfx_shoot_1.play()
 	#print("🛠 Bullet spawned on", name, "| Owner:", shooter_pid, "| pos:", pos, "| rot:", rot)
 	var bullet = BULLET.instantiate()
 	bullet.set_multiplayer_authority(shooter_pid)

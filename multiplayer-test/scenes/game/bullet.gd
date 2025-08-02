@@ -1,9 +1,8 @@
 #Bullet Code
 extends Area2D
 
-
-var speed = 1000  # Bullet Speed
-var dmg = 20  # Damage when bullet hits a player
+@export var speed = 1000  # Bullet Speed
+@export var dmg = 10  # Damage when bullet hits a player
 
 #Bullet Speed and Direction
 func _physics_process(delta):

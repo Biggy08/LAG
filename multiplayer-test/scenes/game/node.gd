@@ -1,7 +1,7 @@
 class_name Game #for simplifications (like type hints)
 extends Node
 
-@export var match_duration := 15 # seconds
+@export var match_duration := 120 # seconds
 var match_time_left := match_duration
 var match_timer := Timer.new()
 

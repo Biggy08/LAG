@@ -291,6 +291,7 @@ scale = Vector2(1.2, 1.2)
 collision_layer = 3
 slide_on_ceiling = false
 script = ExtResource("1_uu06s")
+SHOOT_COOLDOWN = 0.09
 
 [node name="Hat" type="Sprite2D" parent="."]
 visible = false
@@ -375,6 +376,8 @@ stream = ExtResource("10_dsw4c")
 [node name="sfx_shoot1" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 visible = false
 stream = ExtResource("6_121pn")
+volume_db = -20.112
+max_polyphony = 10
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
