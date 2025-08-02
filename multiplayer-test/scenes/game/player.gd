@@ -12,7 +12,6 @@ const MAX_HEALTH = 100
 var kills: int = 0
 var deaths: int = 0
 const RESPAWN_TIME = 3
-@export var SHOOT_COOLDOWN: float = 0.1
 
 var is_local_player := false
 var base_gun_pos = Vector2.ZERO
@@ -24,6 +23,11 @@ var playing_double_jump = false
 var double_jump_timer := 0.2  # seconds to let the animation play
 var double_jump_played = false
 
+# Shooting
+@export var SHOOT_COOLDOWN: float = 0.1
+@export_range(0, 45, 1)
+var bullet_spread: float = 1.0  # in degrees
+@export var base_bullet_spread: float = 1.0
 
 # Ammo system
 const MAX_AMMO = 40
@@ -125,27 +129,29 @@ func _on_AimJoystick_shoot(direction: Vector2):
 
 func shoot_in_direction(direction: Vector2) -> void:
 	if not can_shoot:
-		#print(" Can't shoot — on cooldown →", name)
 		return
 	if current_ammo <= 0:
 		reload()
 		return
 
-	#print("SHOOTING from", name, "| Direction:", direction)
 	can_shoot = false
 	current_ammo -= 1
 	update_ammo_label()
 
 	if is_multiplayer_authority():
 		var pos = muzzle.global_position
-		var rot = direction.angle()
-		#print("Spawning bullet from", name, "at", pos, "| angle:", rot)
+
+		# 🔄 Apply bullet spread
+		var spread_radians = deg_to_rad(bullet_spread)
+		var angle_offset = randf_range(-spread_radians, spread_radians)
+		var spread_direction = direction.rotated(angle_offset)
+		var rot = spread_direction.angle()
+
 		spawn_bullet.rpc(pos, rot, multiplayer.get_unique_id())
-	else:
-		print(" Not authority in shoot_in_direction →", name)
 
 	await get_tree().create_timer(SHOOT_COOLDOWN).timeout
 	can_shoot = true
+
 
 func reload():
 	if is_reloading or current_ammo == MAX_AMMO:
@@ -171,9 +177,12 @@ func _physics_process(delta: float) -> void:
 	velocity += get_gravity() * delta
 
 	var direction := Input.get_axis("ui_left", "ui_right")
+	var is_running = false
+
 	if direction != 0:
 		velocity.x = direction * SPEED
 		last_direction = direction
+		is_running = true
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
@@ -208,8 +217,12 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-
-
+	# 🎯 Update bullet spread dynamically
+	bullet_spread = base_bullet_spread
+	if is_running:
+		bullet_spread += 2
+	if not is_on_floor():
+		bullet_spread += 30
 
 
 func _process(delta):
