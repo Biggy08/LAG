@@ -241,6 +241,11 @@ func _on_host_pressed() -> void:
 	multiplayer.peer_connected.connect(func(pid):
 		print(" PLAYER JOINED: ", pid)
 		$MultiplayerSpawner.spawn(pid)
+		
+		var host_id = multiplayer.get_unique_id()
+		var host_name = Globals.local_username
+		print("📡 Sending host username to client %d: %s" % [pid, host_name])
+		rpc_id(pid, "register_username", host_id, host_name)
 	)
 
 	multiplayer.peer_disconnected.connect(func(pid):
@@ -253,12 +258,15 @@ func _on_host_pressed() -> void:
 
 	$MultiplayerSpawner.spawn(multiplayer.get_unique_id())
 
+	register_username(multiplayer.get_unique_id(), Globals.local_username)
+	
 	# 🖥 Show Host IP
 	var ip = get_valid_lan_ip()
 	print(" Host LAN IP: ", ip)
 	host_ip_label.text = " IP not found!" if ip == "IP_NOT_FOUND" else "📡 Your IP: " + ip
 	host_ip_label.show()
 
+	
 	multiplayer_ui.hide()
 	
 #  JOIN
@@ -321,7 +329,7 @@ func register_death(pid: int):
 	if !player_stats.has(pid): return
 	player_stats[pid]["deaths"] += 1
 	
-
+@rpc("reliable")
 func register_username(pid: int, username: String):
 	player_usernames[pid] = username
 	print("✅ Registered username:", username, "for", pid)
@@ -351,6 +359,9 @@ func request_damage(target_id: int, damage: int, shooter_id: int):
 func send_username_to_host(pid: int, username: String):
 	print("📨 Client sent username to host:", username)
 	register_username(pid, username)
+	
+	# Host informs all other peers
+	register_username.rpc(pid, username)
 
 # SPAWN PLAYER
 func add_player(pid):

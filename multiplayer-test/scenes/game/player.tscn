@@ -244,6 +244,7 @@ slide_on_ceiling = false
 script = ExtResource("1_uu06s")
 
 [node name="Hat" type="Sprite2D" parent="."]
+visible = false
 top_level = true
 position = Vector2(275.5, 216)
 scale = Vector2(0.166333, 0.152305)
