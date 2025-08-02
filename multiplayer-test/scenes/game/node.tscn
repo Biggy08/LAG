@@ -876,6 +876,21 @@ position = Vector2(-2236, 208)
 [node name="Box4" parent="." instance=ExtResource("14_vno2n")]
 position = Vector2(-1917, 1421)
 
+[node name="Box5" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-4161, 1033)
+
+[node name="Box6" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-3198, 3232)
+
+[node name="Box7" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-3692, 2407)
+
+[node name="Box8" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-2487, 2210)
+
+[node name="Box9" parent="." instance=ExtResource("14_vno2n")]
+position = Vector2(-5031, 3429)
+
 [connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
 [connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
 [connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map2" to="." method="_on_map_2_pressed"]
