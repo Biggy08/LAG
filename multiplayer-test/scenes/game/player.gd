@@ -128,6 +128,8 @@ func _on_AimJoystick_shoot(direction: Vector2):
 	shoot_in_direction(direction)
 
 func shoot_in_direction(direction: Vector2) -> void:
+	if is_reloading:
+		return
 	if not can_shoot:
 		return
 	if current_ammo <= 0:
@@ -165,10 +167,11 @@ func reload():
 	current_ammo = MAX_AMMO
 	is_reloading = false
 	update_ammo_label()
+	can_shoot = true  # <--- Add this line
 	print("✅ Reload complete")
 
-var last_direction = 1  # 1 = right, -1 = left
 
+var last_direction = 1  # 1 = right, -1 = left
 
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
@@ -237,6 +240,12 @@ func _process(delta):
 			facing_left = true
 		elif aim_x > 0.1:
 			facing_left = false
+			
+	if Input.is_action_just_pressed("ui_reload"):
+		if not is_multiplayer_authority():
+			rpc_id(get_multiplayer_authority(), "reload")
+		else:
+			reload()
 
 	sprite_2d.flip_h = facing_left
 	$GunContainer/GunSprite.flip_h = facing_left
@@ -357,3 +366,9 @@ func add_kill():
 func _on_jump_button_pressed() -> void:
 	Input.action_press("ui_accept")
 	Input.action_release("ui_accept")
+
+
+
+func _on_reload_pressed() -> void:
+	Input.action_press("ui_reload")
+	Input.action_release("ui_reload")
