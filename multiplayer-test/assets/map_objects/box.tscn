@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bb5njnjuh5b5d"]
+
+[ext_resource type="Texture2D" uid="uid://0cxic3r3rnos" path="res://assets/map_objects/box.png" id="1_oj5lh"]
+
+[node name="Box" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 10
+position = Vector2(238.25, 120)
+scale = Vector2(0.556872, 0.551402)
+texture = ExtResource("1_oj5lh")
