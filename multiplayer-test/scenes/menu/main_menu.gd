@@ -10,6 +10,7 @@ func _on_play_pressed() -> void:
 
 func _on_options_pressed() -> void:
 	AudioManager.click_sound()
+	get_tree().change_scene_to_file("res://scenes/menu/Setting.tscn")
 
 
 func _on_exit_pressed() -> void:

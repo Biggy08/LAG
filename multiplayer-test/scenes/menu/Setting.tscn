@@ -1,0 +1,99 @@
+[gd_scene load_steps=8 format=3 uid="uid://cuhfdit6x3ln6"]
+
+[ext_resource type="Script" uid="uid://cgieyvxwe0mgl" path="res://scenes/menu/setting.gd" id="1_bi5il"]
+[ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="2_y3qfh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y3qfh"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_y3qfh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mypp5"]
+bg_color = Color(0.0470588, 0.2, 0.27451, 0.462745)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.0470588, 0.811765, 0.882353, 0.505882)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ipyb"]
+bg_color = Color(0.027451, 0.145098, 0.203922, 0.847059)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.0156863, 0.796078, 0.858824, 0.87451)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Theme" id="Theme_ov2hk"]
+Button/styles/normal = SubResource("StyleBoxFlat_mypp5")
+Button/styles/pressed = SubResource("StyleBoxFlat_6ipyb")
+
+[node name="Setting" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bi5il")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Volume2" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Volume"
+
+[node name="Volume" type="HSlider" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_y3qfh")
+min_value = -80.0
+max_value = 0.0
+
+[node name="Mute" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Mute"
+
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_y3qfh")
+theme_override_font_sizes/font_size = 20
+
+[node name="Back" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -67.9999
+offset_top = 8.0
+offset_right = 314.0
+offset_bottom = 166.0
+grow_horizontal = 2
+scale = Vector2(0.35, 0.35)
+theme = SubResource("Theme_ov2hk")
+texture_normal = ExtResource("2_y3qfh")
+stretch_mode = 0
+
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/Volume" to="." method="_on_volume_value_changed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/CheckBox" to="." method="_on_check_box_toggled"]
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]

@@ -356,6 +356,7 @@ action_right = ""
 action_up = ""
 
 [node name="AmmoLabel" type="Label" parent="CanvasLayer/Control"]
+layout_mode = 0
 offset_left = 547.0
 offset_top = 542.0
 offset_right = 611.0

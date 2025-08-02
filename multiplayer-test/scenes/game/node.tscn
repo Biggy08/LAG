@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=4 uid="uid://q6rcqnftg2g8"]
+[gd_scene load_steps=28 format=4 uid="uid://q6rcqnftg2g8"]
 
 [ext_resource type="Script" uid="uid://brlvq1bfqbjpo" path="res://scenes/game/node.gd" id="1_xk3sj"]
 [ext_resource type="Texture2D" uid="uid://wad4tf3kekvu" path="res://assets/map/background.png" id="2_50voc"]
@@ -13,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://buuydpe7kh1v6" path="res://assets/menu/Host.png" id="10_jqqd6"]
 [ext_resource type="Texture2D" uid="uid://c8t6uniybsysr" path="res://assets/menu/Join.png" id="11_2ocsm"]
 [ext_resource type="Texture2D" uid="uid://cunww23vuaalw" path="res://assets/menu/Back.png" id="12_vno2n"]
-[ext_resource type="PackedScene" uid="uid://c5domnm2an5dn" path="res://scenes/game/jump_pad.tscn" id="14_vno2n"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rstri"]
 texture = ExtResource("3_kdpyv")
@@ -438,7 +437,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color(1, 1, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mypp5"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_62xcg"]
 bg_color = Color(0.0470588, 0.2, 0.27451, 0.462745)
 border_width_left = 4
 border_width_top = 4
@@ -450,7 +449,7 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ipyb"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gcm7"]
 bg_color = Color(0.027451, 0.145098, 0.203922, 0.847059)
 border_width_left = 4
 border_width_top = 4
@@ -463,8 +462,8 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="Theme" id="Theme_fxnns"]
-Button/styles/normal = SubResource("StyleBoxFlat_mypp5")
-Button/styles/pressed = SubResource("StyleBoxFlat_6ipyb")
+Button/styles/normal = SubResource("StyleBoxFlat_62xcg")
+Button/styles/pressed = SubResource("StyleBoxFlat_7gcm7")
 
 [node name="game" type="Node"]
 script = ExtResource("1_xk3sj")
@@ -679,6 +678,7 @@ offset_bottom = 63.0
 label_settings = SubResource("LabelSettings_vno2n")
 
 [node name="Multiplayer" type="Control" parent="UI"]
+visible = false
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 3
 anchors_preset = 15
@@ -795,7 +795,7 @@ offset_top = -3.0
 offset_right = 891.0
 offset_bottom = 155.0
 grow_horizontal = 2
-scale = Vector2(0.35, 0.35)
+scale = Vector2(0.400784, 0.397353)
 theme = SubResource("Theme_fxnns")
 texture_normal = ExtResource("12_vno2n")
 stretch_mode = 0
@@ -810,9 +810,6 @@ stream = ExtResource("4_bhoiw")
 
 [node name="sfx_join" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ubwsr")
-
-[node name="JumpPad" parent="." instance=ExtResource("14_vno2n")]
-position = Vector2(514, 494)
 
 [connection signal="pressed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_pressed"]
 [connection signal="visibility_changed" from="UI/MapSelection/VBoxContainer/Map1" to="." method="_on_map_1_visibility_changed"]
