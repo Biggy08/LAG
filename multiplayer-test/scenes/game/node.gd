@@ -64,6 +64,12 @@ func update_match_timer():
 						joystick_container.get_node("Virtual Joystick").visible = false
 					if joystick_container.has_node("Aim Joystick"):
 						joystick_container.get_node("Aim Joystick").visible = false
+					if joystick_container.has_node("jump_button"):
+						joystick_container.get_node("jump_button").visible = false
+					if joystick_container.has_node("reload"):
+						joystick_container.get_node("reload").visible = false
+					if joystick_container.has_node("AmmoLabel"):
+						joystick_container.get_node("AmmoLabel").visible = false
 						
 		hide_local_player_ui.rpc()
 		

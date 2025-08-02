@@ -1,6 +1,9 @@
 class_name Player
 extends CharacterBody2D
 
+
+
+
 @onready var cam: Camera2D = $Camera2D
 
 # Movement
