@@ -2,10 +2,19 @@ extends Node
 
 @onready var menu: AudioStreamPlayer = $Menu
 @onready var click: AudioStreamPlayer = $Click
+@onready var music_1: AudioStreamPlayer = $music1
+
+@onready var music_2: AudioStreamPlayer = $music2
+@onready var music_3: AudioStreamPlayer = $music3
 
 var music_volume_db: float = 0.0
 var is_music_muted: bool = false
 
+func play_music2():
+	music_2.play()
+	
+func play_music3():
+	music_3.play()
 
 
 func play_music():

@@ -449,6 +449,8 @@ func get_local_player():
 
 @rpc("any_peer", "call_local")
 func teleport_all_players_to_map1():
+	
+	AudioManager.play_music23()
 	Globals.current_map = 1
 	print("Map 1 was pressed via RPC")
 	print("Current Map : " + str(Globals.current_map))
@@ -474,6 +476,7 @@ func _on_map_1_pressed() -> void:
 # Teleport to map2
 @rpc("any_peer","call_local")  #any_peer for clients  #call_local for host device
 func teleport_all_players_to_map2():
+	AudioManager.play_music2()
 	Globals.current_map = 2
 	print("Map 2 was pressed via RPC")
 	print("Current Map : " + str(Globals.current_map))
