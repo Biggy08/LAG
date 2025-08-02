@@ -21,7 +21,7 @@ var jump_count = 0
 const MAX_JUMPS = 2
 var playing_double_jump = false
 var double_jump_timer := 0.2  # seconds to let the animation play
-
+var double_jump_played = false
 
 
 # Ammo system
@@ -73,6 +73,7 @@ func _ready():
 
 	if is_local_player:
 		$"CanvasLayer/Control/Aim Joystick".visible = true
+		$CanvasLayer/Control/jump_button.visible = true
 		call_deferred("_connect_joystick")
 		cam.enabled = true
 		cam.make_current()
@@ -161,45 +162,50 @@ func reload():
 
 var last_direction = 1  # 1 = right, -1 = left
 
+
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
-		return	
+		return
 
-	# Apply gravity every frame (always)
 	velocity += get_gravity() * delta
 
-
-	# Animation logic with double jump check
-	if not is_on_floor():
-		if not playing_double_jump:
-			sprite_2d.animation = "jumping"
-	elif abs(velocity.x) > 1:
-		sprite_2d.animation = "running"
-		if not $"Audio Node 2D/sfx_run".playing:
-			$"Audio Node 2D/sfx_run".play()
-	else:
-		sprite_2d.animation = "idle"
-
-	# Horizontal movement input
 	var direction := Input.get_axis("ui_left", "ui_right")
-	if direction:
+	if direction != 0:
 		velocity.x = direction * SPEED
 		last_direction = direction
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
-	# Move and slide with updated velocity
-	move_and_slide()
-
-	# Jump input (only from floor)
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		jump_count = 1  # reset jump count to 1 for first jump
-		$"Audio Node 2D/sfx_jump".play()
-
-	# Reset jump count when player lands
+	# Reset jump count and flag when on floor
 	if is_on_floor():
 		jump_count = 0
+		double_jump_played = false
+
+	# Handle jump input only if jump_count less than max
+	if Input.is_action_just_pressed("ui_accept") and jump_count < MAX_JUMPS:
+		jump_count += 1
+		velocity.y = JUMP_VELOCITY
+		sfx_jump.play()
+
+		if jump_count == 2 and not double_jump_played:
+			sprite_2d.play("double_jump")
+			double_jump_played = true
+			playing_double_jump = true
+			await get_tree().create_timer(double_jump_timer).timeout
+			playing_double_jump = false
+
+	# Animation control (don't override double jump anim)
+	if not playing_double_jump:
+		if not is_on_floor():
+			sprite_2d.animation = "jumping"
+		elif abs(velocity.x) > 1:
+			sprite_2d.animation = "running"
+		else:
+			sprite_2d.animation = "idle"
+
+	move_and_slide()
+
+
 
 
 
@@ -228,22 +234,12 @@ func _process(delta):
 
 	
 
-
-
-
-
-		# No else: keep current facing if aim_x between -0.1 and 0.1
-
-
-
 func set_camera_limits(left: int, right: int, top: int, bottom: int):
 	cam.limit_left = left
 	cam.limit_right = right
 	cam.limit_top = top
 	cam.limit_bottom = bottom
 	
-
-
 
 
 @rpc("call_local")
@@ -343,15 +339,5 @@ func add_kill():
 
 
 func _on_jump_button_pressed() -> void:
-	sfx_jump.play()
-	if jump_count < MAX_JUMPS:
-		velocity.y = JUMP_VELOCITY
-		jump_count += 1
-
-		if jump_count == 2:
-			
-			sprite_2d.play("double_jump")
-			
-			playing_double_jump = true
-			await get_tree().create_timer(double_jump_timer).timeout
-			playing_double_jump = false
+	Input.action_press("ui_accept")
+	Input.action_release("ui_accept")
