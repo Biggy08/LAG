@@ -3,8 +3,11 @@ extends CharacterBody2D
 
 @onready var cam: Camera2D = $Camera2D
 
+# Movement
 const SPEED = 300.0
 const JUMP_VELOCITY = -500.0
+
+#For  kills /deaths/respawns
 const MAX_HEALTH = 100
 var kills: int = 0
 var deaths: int = 0
@@ -13,7 +16,13 @@ const SHOOT_COOLDOWN = 0.2
 var is_local_player := false
 var base_gun_pos = Vector2.ZERO
 
-const jump_pad_height: float = -500.0
+#For double jump
+var jump_count = 0
+const MAX_JUMPS = 2
+var playing_double_jump = false
+var double_jump_timer := 0.2  # seconds to let the animation play
+
+
 
 # Ammo system
 const MAX_AMMO = 10
@@ -28,6 +37,8 @@ const BULLET = preload("res://scenes/game/bullet.tscn")
 @onready var sfx_death = $"Audio Node 2D/sfx_death"
 @onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
 @onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
+@onready var sfx_jump: AudioStreamPlayer2D = $"Audio Node 2D/sfx_jump"
+
 @onready var health_bar = $HealthBar
 @onready var NameLabel = $NameLabel
 @onready var muzzle = $GunContainer/GunSprite/Muzzle
@@ -154,11 +165,14 @@ func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return	
 
-	#$GunContainer.look_at(get_global_mouse_position())
+	# Apply gravity every frame (always)
+	velocity += get_gravity() * delta
 
+
+	# Animation logic with double jump check
 	if not is_on_floor():
-		velocity += get_gravity() * delta
-		sprite_2d.animation = "jumping"
+		if not playing_double_jump:
+			sprite_2d.animation = "jumping"
 	elif abs(velocity.x) > 1:
 		sprite_2d.animation = "running"
 		if not $"Audio Node 2D/sfx_run".playing:
@@ -166,20 +180,27 @@ func _physics_process(delta: float) -> void:
 	else:
 		sprite_2d.animation = "idle"
 
+	# Horizontal movement input
 	var direction := Input.get_axis("ui_left", "ui_right")
 	if direction:
 		velocity.x = direction * SPEED
-		last_direction = direction  # store the last movement direction
+		last_direction = direction
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
+	# Move and slide with updated velocity
 	move_and_slide()
 
-	#sprite_2d.flip_h = last_direction < 0  # face left if last direction was left
-
+	# Jump input (only from floor)
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+		jump_count = 1  # reset jump count to 1 for first jump
 		$"Audio Node 2D/sfx_jump".play()
+
+	# Reset jump count when player lands
+	if is_on_floor():
+		jump_count = 0
+
 
 
 func _process(delta):
@@ -319,3 +340,18 @@ func teleport_to_position(pos: Vector2):
 func add_kill():
 	if multiplayer.is_server():
 		game.register_kill(int(name))
+
+
+func _on_jump_button_pressed() -> void:
+	sfx_jump.play()
+	if jump_count < MAX_JUMPS:
+		velocity.y = JUMP_VELOCITY
+		jump_count += 1
+
+		if jump_count == 2:
+			
+			sprite_2d.play("double_jump")
+			
+			playing_double_jump = true
+			await get_tree().create_timer(double_jump_timer).timeout
+			playing_double_jump = false
