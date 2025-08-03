@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://c5won7nctd8y6"]
+[gd_scene load_steps=51 format=3 uid="uid://c5won7nctd8y6"]
 
 [ext_resource type="Texture2D" uid="uid://dgfe2a4ohwoxw" path="res://assets/players/Jump (32x32).png" id="1_gv3r6"]
 [ext_resource type="Script" uid="uid://cor1pol367n80" path="res://scenes/game/player.gd" id="1_uu06s"]
@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://dai7mknuqc041" path="res://assets/sounds/DeathBell.mp3" id="9_bnwh7"]
 [ext_resource type="AudioStream" uid="uid://chw6fi6e6fryx" path="res://assets/sounds/Respawn.mp3" id="10_dsw4c"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="11_dsw4c"]
+[ext_resource type="AudioStream" uid="uid://btka380w4u4vb" path="res://assets/sounds/reload.mp3" id="13_cyajl"]
 [ext_resource type="Texture2D" uid="uid://def1iig3iu1ye" path="res://assets/UI/jump_button.png" id="14_sia57"]
 [ext_resource type="Texture2D" uid="uid://cvdwa6ymdbgcx" path="res://assets/UI/reload.png" id="16_cyajl"]
 
@@ -370,6 +371,12 @@ stream = ExtResource("10_dsw4c")
 [node name="sfx_shoot1" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
 visible = false
 stream = ExtResource("6_121pn")
+volume_db = -20.112
+max_polyphony = 10
+
+[node name="sfx_reload" type="AudioStreamPlayer2D" parent="Audio Node 2D"]
+visible = false
+stream = ExtResource("13_cyajl")
 volume_db = -20.112
 max_polyphony = 10
 

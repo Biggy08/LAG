@@ -422,6 +422,8 @@ func show_host_disconnected_message():
 
 func _on_back_pressed() -> void:
 	AudioManager.click_sound()
+	AudioManager.stop_music2()
+	AudioManager.stop_music3()
 	var pid = get_safe_unique_id()
 	if pid != -1:
 		var player_node = get_node_or_null(str(pid))
@@ -450,7 +452,7 @@ func get_local_player():
 @rpc("any_peer", "call_local")
 func teleport_all_players_to_map1():
 	
-	AudioManager.play_music23()
+	AudioManager.play_music3()
 	Globals.current_map = 1
 	print("Map 1 was pressed via RPC")
 	print("Current Map : " + str(Globals.current_map))

@@ -47,6 +47,7 @@ const BULLET = preload("res://scenes/game/bullet.tscn")
 @onready var sfx_respawn = $"Audio Node 2D/sfx_respawn"
 @onready var sfx_shoot_1 = $"Audio Node 2D/sfx_shoot1"
 @onready var sfx_jump: AudioStreamPlayer2D = $"Audio Node 2D/sfx_jump"
+@onready var sfx_reload = $"Audio Node 2D/sfx_reload"
 
 @onready var health_bar = $HealthBar
 @onready var NameLabel = $NameLabel
@@ -163,15 +164,16 @@ func reload():
 		return
 
 	is_reloading = true
+	sfx_reload.play()
 	update_ammo_label()
 
-	print("🔄 Reloading...")
+	print("Reloading...")
 	await get_tree().create_timer(RELOAD_TIME).timeout
 	current_ammo = MAX_AMMO
 	is_reloading = false
 	update_ammo_label()
 	can_shoot = true  # <--- Add this line
-	print("✅ Reload complete")
+	print("Reload complete")
 
 
 var last_direction = 1  # 1 = right, -1 = left

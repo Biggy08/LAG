@@ -13,6 +13,12 @@ var is_music_muted: bool = false
 func play_music2():
 	music_2.play()
 	
+func stop_music2():
+	music_2.stop()
+	
+func stop_music3():
+	music_3.stop()
+	
 func play_music3():
 	music_3.play()
 
